@@ -1305,8 +1305,8 @@ function submitReg(){
       status: 'pending'
     })
   }).then(res => {
-    if(!res.ok) res.json().then(e => );
-  }).catch(e => );
+    if(!res.ok) res.json().then(e => console.error(e));
+  }).catch(e => console.error(e));
   document.getElementById('pending-tw').textContent='@'+itw;
   show('pending');startCountdown();setLg(lang);
 }
