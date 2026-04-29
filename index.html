@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>nasKURD</title>
 <style>
+/* Performance optimizations */
+.screen{will-change:opacity;transform:translateZ(0);}
+*{-webkit-tap-highlight-color:transparent;}
+
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#020B18;color:#eee;min-height:100vh}
 .scr{display:none;min-height:100vh}
@@ -236,11 +240,7 @@ select option{background:#041E32;color:#f0e6cc}
       </div>
     </div>
     <div style="padding:0 18px 14px;text-align:center">
-      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px">
-      <button onclick="demoWallet()" style="background:transparent;border:1px solid rgba(196,162,76,.2);border-radius:8px;padding:6px 14px;color:rgba(196,162,76,.4);font-size:10px;cursor:pointer">👁 Demo Nasname</button>
-      <button onclick="demoRejected()" style="background:transparent;border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:6px 14px;color:rgba(192,57,43,.4);font-size:10px;cursor:pointer">✕ Demo Red</button>
-      <button onclick="demoAdmin()" style="background:transparent;border:1px solid rgba(100,100,200,.2);border-radius:8px;padding:6px 14px;color:rgba(100,100,200,.5);font-size:10px;cursor:pointer">🔧 Demo Admin</button>
-    </div>
+      
     <div style="font-size:10px;font-family:monospace;letter-spacing:.5px"><span style="color:rgba(200,32,42,.7)">@rojtevkurdi</span> <span style="color:rgba(196,162,76,.4)">·</span> <span style="color:rgba(27,112,64,.8)">@torakurdakurdi</span></div>
     </div>
     <div class="fb"></div>
@@ -1019,7 +1019,7 @@ localStorage.removeItem('naskurd_tw');
 localStorage.removeItem('naskurd_hash');
 show('invite');
 setLg(lang);
-}catch(e){console.error('Init error:',e);}
+}catch(e){}
 
 // Populate selects and chips
 function populateCtrs(){
@@ -1305,8 +1305,8 @@ function submitReg(){
       status: 'pending'
     })
   }).then(res => {
-    if(!res.ok) res.json().then(e => console.error('Supabase error:', e));
-  }).catch(e => console.error('Network error:', e));
+    if(!res.ok) res.json().then(e => );
+  }).catch(e => );
   document.getElementById('pending-tw').textContent='@'+itw;
   show('pending');startCountdown();setLg(lang);
 }
@@ -2353,14 +2353,29 @@ function goLock(){
 
 function captureElement(el, filename, action){
   function doCapture(){
-    window.html2canvas(el,{scale:3,backgroundColor:null,logging:false}).then(cv=>{
+    window.html2canvas(el,{
+      scale:3,
+      backgroundColor:null,
+      logging:false,
+      useCORS:true,
+      allowTaint:true,
+      foreignObjectRendering:false
+    }).then(cv=>{
       cv.toBlob(blob=>{
         if(action==='download'){
           const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
         } else if(action==='share'){
-          if(navigator.share){
+          // Always provide download as fallback
+          const dlUrl = URL.createObjectURL(blob);
+          if(navigator.share && navigator.canShare){
             const file=new File([blob],filename,{type:'image/png'});
-            navigator.share({files:[file],title:'nasKURD',text:'Nasnameya Kurdî Ya Dîjîtal'}).catch(()=>{});
+            if(navigator.canShare({files:[file]})){
+              navigator.share({files:[file],title:'nasKURD',text:'Nasnameya Kurdî Ya Dîjîtal'}).catch(()=>{
+                const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
+              });
+            } else {
+              const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
+            }
           } else {
             const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
           }
