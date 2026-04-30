@@ -2447,60 +2447,82 @@ function captureElement(el, filename, action){
     const shine=el.querySelector('.card-shine');
     if(shine)shine.style.display='none';
 
-    window.html2canvas(el,{
-      scale:4,
-      backgroundColor:null,
-      logging:false,
-      useCORS:true,
-      allowTaint:true,
-      foreignObjectRendering:false
-    }).then(cv=>{
-      spinEls.forEach(s=>s.style.animation='');
-      if(shine)shine.style.display='';
+    // Stop all animations and 3D transforms on the card itself
+    const origAnim=el.style.animation;
+    const origTransformStyle=el.style.transformStyle;
+    const origTransform=el.style.transform;
+    el.style.animation='none';
+    el.style.transformStyle='flat';
+    el.style.transform='none';
 
-      // Apply rounded corners on top of html2canvas result
-      const w=cv.width, h=cv.height;
-      const out=document.createElement('canvas');
-      out.width=w; out.height=h;
-      const ctx=out.getContext('2d');
-      ctx.clearRect(0,0,w,h);
-      const r=16*4; // 16px CSS radius × scale 4
-      ctx.beginPath();
-      ctx.moveTo(r,0);
-      ctx.lineTo(w-r,0);ctx.arcTo(w,0,w,r,r);
-      ctx.lineTo(w,h-r);ctx.arcTo(w,h,w-r,h,r);
-      ctx.lineTo(r,h);ctx.arcTo(0,h,0,h-r,r);
-      ctx.lineTo(0,r);ctx.arcTo(0,0,r,0,r);
-      ctx.closePath();ctx.clip();
-      ctx.drawImage(cv,0,0);
+    // Small delay to let browser settle after stopping animations
+    setTimeout(()=>{
+      window.html2canvas(el,{
+        scale:4,
+        backgroundColor:null,
+        logging:false,
+        useCORS:true,
+        allowTaint:true,
+        foreignObjectRendering:false
+      }).then(cv=>{
+        // Restore
+        el.style.animation=origAnim;
+        el.style.transformStyle=origTransformStyle;
+        el.style.transform=origTransform;
+        spinEls.forEach(s=>s.style.animation='');
+        if(shine)shine.style.display='';
 
-      out.toBlob(blob=>{
-        if(!blob)return;
-        if(action==='download'){
-          const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
-        } else if(action==='share'){
-          const dlUrl=URL.createObjectURL(blob);
-          if(navigator.share&&navigator.canShare){
-            const file=new File([blob],filename,{type:'image/png'});
-            if(navigator.canShare({files:[file]})){
-              navigator.share({files:[file],title:'nasKURD',text:'Nasnameya Kurdî Ya Dîjîtal'}).catch(()=>{
+        // Apply rounded corners
+        const w=cv.width, h=cv.height;
+        const out=document.createElement('canvas');
+        out.width=w; out.height=h;
+        const ctx=out.getContext('2d');
+        ctx.clearRect(0,0,w,h);
+        const r=16*4;
+        ctx.beginPath();
+        ctx.moveTo(r,0);
+        ctx.lineTo(w-r,0);ctx.arcTo(w,0,w,r,r);
+        ctx.lineTo(w,h-r);ctx.arcTo(w,h,w-r,h,r);
+        ctx.lineTo(r,h);ctx.arcTo(0,h,0,h-r,r);
+        ctx.lineTo(0,r);ctx.arcTo(0,0,r,0,r);
+        ctx.closePath();ctx.clip();
+        ctx.drawImage(cv,0,0);
+
+        out.toBlob(blob=>{
+          if(!blob)return;
+          if(action==='download'){
+            const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
+          } else if(action==='share'){
+            const dlUrl=URL.createObjectURL(blob);
+            if(navigator.share&&navigator.canShare){
+              const file=new File([blob],filename,{type:'image/png'});
+              if(navigator.canShare({files:[file]})){
+                navigator.share({files:[file],title:'nasKURD',text:'Nasnameya Kurdî Ya Dîjîtal'}).catch(()=>{
+                  const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
+                });
+              } else {
                 const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
-              });
+              }
             } else {
               const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
             }
-          } else {
-            const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
+          } else if(action==='copy'){
+            navigator.clipboard.write([new ClipboardItem({'image/png':blob})]).then(()=>{
+              showAdminNotif(lang==='ku'?'✓ Wêne hat kopîkirin':'✓ Image copied!');
+            }).catch(()=>{
+              const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
+            });
           }
-        } else if(action==='copy'){
-          navigator.clipboard.write([new ClipboardItem({'image/png':blob})]).then(()=>{
-            showAdminNotif(lang==='ku'?'✓ Wêne hat kopîkirin':'✓ Image copied!');
-          }).catch(()=>{
-            const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
-          });
-        }
-      },'image/png');
-    });
+        },'image/png');
+      }).catch(err=>{
+        el.style.animation=origAnim;
+        el.style.transformStyle=origTransformStyle;
+        el.style.transform=origTransform;
+        spinEls.forEach(s=>s.style.animation='');
+        if(shine)shine.style.display='';
+        console.error('Capture error:',err);
+      });
+    }, 100);
   }
   if(!window.html2canvas){
     const s=document.createElement('script');
