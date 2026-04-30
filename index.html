@@ -510,52 +510,7 @@ select option{background:#041E32;color:#f0e6cc}
 </div>
 
 <!-- ADMIN -->
-<div id="s-admin" class="scr" style="flex-direction:column;background:#020B14;overflow-y:auto">
-
-  <!-- Header -->
-  <div style="position:sticky;top:0;z-index:100;background:rgba(2,10,23,.98);border-bottom:1px solid rgba(196,162,76,.15)">
-    <div style="height:3px;background:linear-gradient(90deg,#C8202A,#D4A82A 50%,#1B7040)"></div>
-    <div style="padding:10px 16px;display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:10px">
-        <svg width="28" height="28" viewBox="0 0 38 38" id="roj-admin"></svg>
-        <div>
-          <div style="font-size:14px;font-weight:900;color:#C4A24C;letter-spacing:1px">nasKURD</div>
-          <div style="font-size:8px;color:rgba(196,162,76,.4);letter-spacing:2px">ADMIN PANEL</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="text-align:right">
-          <div style="font-size:8px;color:rgba(196,162,76,.5);font-family:monospace">@_nasKURD</div>
-        <button onclick="changeInviteCode()" style="background:rgba(196,162,76,.1);border:1px solid rgba(196,162,76,.25);border-radius:6px;padding:3px 8px;color:rgba(196,162,76,.7);font-size:8px;cursor:pointer;margin-top:2px">🎟 Koda vexwendinê biguhêre</button>
-        </div>
-        <button id="btn-admin-exit" onclick="goLock()" style="background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);border-radius:8px;padding:5px 12px;color:#E05050;font-size:10px;font-weight:600;cursor:pointer">Derkeve</button>
-      </div>
-    </div>
-
-    <!-- Stats bar -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(196,162,76,.08)">
-      <button class="atab-btn on" id="atab-pending" onclick="setAtab('pending')" style="padding:10px 4px">
-        <div id="acnt-p" style="font-size:18px;font-weight:900;color:#F5C518">0</div>
-        <div style="font-size:8px;color:rgba(245,197,24,.5);letter-spacing:.5px">Benda</div>
-      </button>
-      <button class="atab-btn" id="atab-approved" onclick="setAtab('approved')" style="padding:10px 4px">
-        <div id="acnt-a" style="font-size:18px;font-weight:900;color:#4EC87A">0</div>
-        <div style="font-size:8px;color:rgba(78,200,122,.5);letter-spacing:.5px">Erêkirî</div>
-      </button>
-      <button class="atab-btn" id="atab-rejected" onclick="setAtab('rejected')" style="padding:10px 4px">
-        <div id="acnt-r" style="font-size:18px;font-weight:900;color:#E05050">0</div>
-        <div style="font-size:8px;color:rgba(224,80,80,.5);letter-spacing:.5px">Redkirî</div>
-      </button>
-      <button class="atab-btn" id="atab-revoked" onclick="setAtab('revoked')" style="padding:10px 4px">
-        <div id="acnt-v" style="font-size:18px;font-weight:900;color:rgba(200,168,75,.6)">0</div>
-        <div style="font-size:8px;color:rgba(200,168,75,.3);letter-spacing:.5px">Betal</div>
-      </button>
-    </div>
-  </div>
-
-  <!-- List -->
-  <div id="admin-list" style="padding:12px;max-width:500px;margin:0 auto;width:100%;box-sizing:border-box"></div>
-</div>
+<!-- Admin panel moved to rojtevkurdi.vercel.app/admin.html -->
 
 <!-- WALLET -->
 <div id="s-wallet" class="scr bg" style="flex-direction:column">
@@ -897,7 +852,7 @@ function submitPin(){
   }
 
   // Admin check
-  if(hp(v)===APWD){inp.value='';fp1='';pinBuf='';show('admin');renderAdminList();return;}
+  // Admin check removed - admin is at rojtevkurdi.vercel.app/admin.html
 
   // First entry
   if(!fp1){
@@ -987,7 +942,7 @@ const MAX_STANDARD=10000;
 function hp(s){let h=0;for(let i=0;i<s.length;i++)h=(Math.imul(31,h)+s.charCodeAt(i))|0;return h.toString(36);}
 function mkd(h){return 'did:kurdi:'+h.replace(/[^a-z0-9]/gi,'').toLowerCase()+Math.random().toString(36).slice(2,7);}
 function td(){return new Date().toISOString().slice(0,10);}
-const APWD=hp('rojtev17');
+// Admin panel moved to rojtevkurdi.vercel.app/admin.html
 
 // State
 let activeCard=0;
@@ -1243,7 +1198,7 @@ function handlePin(){
   if(!fp1){fp1=pinBuf;pinBuf='';updDots('pin',pinBuf);document.getElementById('pin-hint').textContent=ku?'Şîfreya xwe dubare binivîse':'Re-enter your password';return;}
   if(pinBuf!==fp1){perr.textContent=lang==='ku'?'Ne li hev hat':'PIN mismatch';perr.style.display='block';pinBuf='';fp1='';updDots('pin',pinBuf);document.getElementById('pin-hint').textContent='';return;}
   const h=hp(pinBuf);
-  if(h===APWD){goAdmin();return;}
+  // Admin check removed - admin is at rojtevkurdi.vercel.app/admin.html
   itw=tw;hashVal=h;pinBuf='';fp1='';
   const ex=apps.find(a=>a.twitter===itw);
   if(!ex){
