@@ -2465,22 +2465,19 @@ function captureElement(el, filename, action){
         allowTaint:true,
         foreignObjectRendering:false,
         onclone:(doc,clone)=>{
-          // Fix SVG gradient references that html2canvas can't render
-          clone.querySelectorAll('[fill^="url("]').forEach(el=>{
-            const fill=el.getAttribute('fill');
-            if(fill.includes('rg_card')||fill.includes('roj'))el.setAttribute('fill','#D4A82A');
-            else if(fill.includes('ring'))el.setAttribute('fill','#F5C518');
-            else el.setAttribute('fill','#D4A82A');
+          // Fix SVG gradient references - search entire cloned document
+          doc.querySelectorAll('[fill^="url(#"]').forEach(svgEl=>{
+            const fill=svgEl.getAttribute('fill');
+            if(fill.includes('rg_card')||fill.includes('roj'))svgEl.setAttribute('fill','#D4A82A');
+            else svgEl.setAttribute('fill','#C4A24C');
           });
-          clone.querySelectorAll('[stroke^="url("]').forEach(el=>{
-            const stroke=el.getAttribute('stroke');
-            if(stroke.includes('ring'))el.setAttribute('stroke','#F5C518');
-            else el.setAttribute('stroke','#D4A82A');
+          doc.querySelectorAll('[stroke^="url(#"]').forEach(svgEl=>{
+            svgEl.setAttribute('stroke','#F5C518');
           });
-          // Stop ring-pause animation too
-          clone.querySelectorAll('[style*="ring-pause"]').forEach(el=>{
-            el.style.animation='none';
-            el.style.transform='rotate(0deg)';
+          // Stop all animations in clone
+          doc.querySelectorAll('[style*="animation"]').forEach(svgEl=>{
+            svgEl.style.animation='none';
+            svgEl.style.transform='none';
           });
         }
       }).then(cv=>{
