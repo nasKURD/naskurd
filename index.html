@@ -987,7 +987,7 @@ const MAX_STANDARD=10000;
 function hp(s){let h=0;for(let i=0;i<s.length;i++)h=(Math.imul(31,h)+s.charCodeAt(i))|0;return h.toString(36);}
 function mkd(h){return 'did:kurdi:'+h.replace(/[^a-z0-9]/gi,'').toLowerCase()+Math.random().toString(36).slice(2,7);}
 function td(){return new Date().toISOString().slice(0,10);}
-const APWD=hp('201700');
+const APWD=hp('rojtev17');
 
 // State
 let activeCard=0;
