@@ -2401,21 +2401,34 @@ function goLock(){
 
 function captureElement(el, filename, action){
   function doCapture(){
-    window.html2canvas(el,{
-      scale:3,
-      backgroundColor:null,
-      logging:false,
-      useCORS:true,
-      allowTaint:true,
-      foreignObjectRendering:false
-    }).then(cv=>{
-      cv.toBlob(blob=>{
+    // Temporarily hide spin animation for clean capture
+    const spinEls=el.querySelectorAll('.spin');
+    spinEls.forEach(s=>s.style.animation='none');
+    const shine=el.querySelector('.card-shine');
+    if(shine)shine.style.display='none';
+
+    const scale=3;
+    const w=el.offsetWidth*scale;
+    const h=el.offsetHeight*scale;
+
+    window.domtoimage.toPng(el,{
+      width:w,
+      height:h,
+      style:{transform:'scale('+scale+')',transformOrigin:'top left',width:el.offsetWidth+'px',height:el.offsetHeight+'px'},
+      bgcolor:null,
+      quality:1
+    }).then(dataUrl=>{
+      // Restore animations
+      spinEls.forEach(s=>s.style.animation='');
+      if(shine)shine.style.display='';
+
+      // Convert dataUrl to blob
+      fetch(dataUrl).then(r=>r.blob()).then(blob=>{
         if(action==='download'){
           const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
         } else if(action==='share'){
-          // Always provide download as fallback
-          const dlUrl = URL.createObjectURL(blob);
-          if(navigator.share && navigator.canShare){
+          const dlUrl=URL.createObjectURL(blob);
+          if(navigator.share&&navigator.canShare){
             const file=new File([blob],filename,{type:'image/png'});
             if(navigator.canShare({files:[file]})){
               navigator.share({files:[file],title:'nasKURD',text:'Nasnameya Kurdî Ya Dîjîtal'}).catch(()=>{
@@ -2425,7 +2438,7 @@ function captureElement(el, filename, action){
               const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
             }
           } else {
-            const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
+            const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
           }
         } else if(action==='copy'){
           navigator.clipboard.write([new ClipboardItem({'image/png':blob})]).then(()=>{
@@ -2434,10 +2447,21 @@ function captureElement(el, filename, action){
             const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
           });
         }
-      },'image/png');
+      });
+    }).catch(err=>{
+      spinEls.forEach(s=>s.style.animation='');
+      if(shine)shine.style.display='';
+      console.error('Capture error:',err);
     });
   }
-  if(!window.html2canvas){const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=doCapture;document.head.appendChild(s);}else{doCapture();}
+  if(!window.domtoimage){
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/dom-to-image-more@3.4.0/dist/dom-to-image-more.min.js';
+    s.onload=doCapture;
+    document.head.appendChild(s);
+  } else {
+    doCapture();
+  }
 }
 
 function showAdminNotif(msg){
