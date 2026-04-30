@@ -204,6 +204,9 @@ select option{background:#041E32;color:#f0e6cc}
       <!-- Hidden input to store handle for downstream JS -->
       <input id="tw-inp" type="hidden" value=""/>
 
+      <!-- Continue button (shown after OAuth success) -->
+      <button id="tw-continue-btn" onclick="routeAfterOAuth(window._twOAuthVerified)" style="display:none;width:100%;padding:14px;background:linear-gradient(90deg,#C4A24C,#8A6010);border:none;border-radius:12px;color:#000;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px">Berdewam bike →</button>
+
       <button onclick="show('manifest');setLg(lang)" style="background:none;border:none;color:rgba(196,162,76,.3);font-size:10px;cursor:pointer;margin-top:8px" id="lock-back-btn">← <span id="lock-back-lbl">Paşve</span></button>
     </div>
     <div class="fb-bot"></div>
@@ -2624,20 +2627,13 @@ function handleTwitterOAuthReturn(){
     const badgeHandle=document.getElementById('tw-verified-handle');
     if(badge){badge.style.display='block';}
     if(badgeHandle){badgeHandle.textContent='@'+handle;}
+    // Hide OAuth button
+    const oauthBtn=document.getElementById('tw-oauth-btn');
+    if(oauthBtn){oauthBtn.style.display='none';}
+    // Show continue button
+    const contBtn=document.getElementById('tw-continue-btn');
+    if(contBtn){contBtn.style.display='block';}
     show('lock');setLg(lang);
-
-    if(appsLoaded){
-      setTimeout(()=>routeAfterOAuth(handle),600);
-    } else {
-      window._pendingOAuthHandle=handle;
-      // Fallback: if apps don't load in 5s, route anyway
-      setTimeout(()=>{
-        if(window._pendingOAuthHandle){
-          window._pendingOAuthHandle=null;
-          routeAfterOAuth(handle);
-        }
-      },5000);
-    }
   }
 }
 (function(){handleTwitterOAuthReturn();})();
