@@ -984,7 +984,15 @@ async function loadApps(){
       window._pendingOAuthHandle=null;
       routeAfterOAuth(h);
     }
-  }catch(e){console.error('loadApps error',e);}
+  }catch(e){
+    console.error('loadApps error',e);
+    appsLoaded=true;
+    if(window._pendingOAuthHandle){
+      const h=window._pendingOAuthHandle;
+      window._pendingOAuthHandle=null;
+      routeAfterOAuth(h);
+    }
+  }
 }
 
 try{
@@ -2618,11 +2626,17 @@ function handleTwitterOAuthReturn(){
     if(badgeHandle){badgeHandle.textContent='@'+handle;}
     show('lock');setLg(lang);
 
-    // Wait for apps to load then route
     if(appsLoaded){
       setTimeout(()=>routeAfterOAuth(handle),600);
     } else {
       window._pendingOAuthHandle=handle;
+      // Fallback: if apps don't load in 5s, route anyway
+      setTimeout(()=>{
+        if(window._pendingOAuthHandle){
+          window._pendingOAuthHandle=null;
+          routeAfterOAuth(handle);
+        }
+      },5000);
     }
   }
 }
