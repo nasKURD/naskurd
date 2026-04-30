@@ -2447,50 +2447,42 @@ function captureElement(el, filename, action){
     const shine=el.querySelector('.card-shine');
     if(shine)shine.style.display='none';
 
-    // Get exact dimensions
     const rect=el.getBoundingClientRect();
     const scale=3;
-    const w=Math.round(rect.width*scale);
-    const h=Math.round(rect.height*scale);
-    const cssRadius=16; // matches card border-radius in CSS
+    const srcW=Math.round(rect.width);
+    const srcH=Math.round(rect.height);
+    const outW=srcW*scale;
+    const outH=srcH*scale;
+    const cssRadius=16;
 
-    // Temporarily flatten border-radius so dom-to-image captures full rect
     const origBR=el.style.borderRadius;
-    const origOV=el.style.overflow;
     el.style.borderRadius='0';
-    el.style.overflow='hidden';
 
     window.domtoimage.toPng(el,{
-      width:w,
-      height:h,
-      style:{transform:'scale('+scale+')',transformOrigin:'top left',width:rect.width+'px',height:rect.height+'px'},
+      width:srcW,
+      height:srcH,
       bgcolor:null,
       quality:1
     }).then(dataUrl=>{
-      // Restore
       el.style.borderRadius=origBR;
-      el.style.overflow=origOV;
       spinEls.forEach(s=>s.style.animation='');
       if(shine)shine.style.display='';
 
       const img=new Image();
       img.onload=function(){
         const cv=document.createElement('canvas');
-        cv.width=w; cv.height=h;
+        cv.width=outW; cv.height=outH;
         const ctx=cv.getContext('2d');
-        // Clear to transparent
-        ctx.clearRect(0,0,w,h);
-        // Rounded clip matching card CSS (16px * scale)
+        ctx.clearRect(0,0,outW,outH);
         const r=cssRadius*scale;
         ctx.beginPath();
         ctx.moveTo(r,0);
-        ctx.lineTo(w-r,0);ctx.arcTo(w,0,w,r,r);
-        ctx.lineTo(w,h-r);ctx.arcTo(w,h,w-r,h,r);
-        ctx.lineTo(r,h);ctx.arcTo(0,h,0,h-r,r);
+        ctx.lineTo(outW-r,0);ctx.arcTo(outW,0,outW,r,r);
+        ctx.lineTo(outW,outH-r);ctx.arcTo(outW,outH,outW-r,outH,r);
+        ctx.lineTo(r,outH);ctx.arcTo(0,outH,0,outH-r,r);
         ctx.lineTo(0,r);ctx.arcTo(0,0,r,0,r);
-        ctx.closePath();
-        ctx.clip();
-        ctx.drawImage(img,0,0,w,h);
+        ctx.closePath();ctx.clip();
+        ctx.drawImage(img,0,0,outW,outH);
 
         cv.toBlob(blob=>{
           if(!blob)return;
@@ -2522,7 +2514,6 @@ function captureElement(el, filename, action){
       img.src=dataUrl;
     }).catch(err=>{
       el.style.borderRadius=origBR;
-      el.style.overflow=origOV;
       spinEls.forEach(s=>s.style.animation='');
       if(shine)shine.style.display='';
       console.error('Capture error:',err);
