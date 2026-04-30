@@ -718,7 +718,7 @@ select option{background:#041E32;color:#f0e6cc}
           </div>
           <div style="display:flex;justify-content:space-between;align-items:flex-end">
             <div>
-              <div id="rojame-card-name" style="font-size:12px;font-weight:700;color:#020D1C;letter-spacing:3px;text-transform:uppercase;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;text-shadow:none;margin-bottom:6px"></div>
+              <div id="rojame-card-name" style="font-size:12px;font-weight:700;color:#FFFFFF;letter-spacing:3px;text-transform:uppercase;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;text-shadow:0 1px 3px rgba(0,0,0,.4);margin-bottom:6px"></div>
             </div>
             <div style="padding-bottom:6px">
               <svg width="60" height="20" viewBox="0 0 60 20">
@@ -1029,6 +1029,7 @@ async function loadApps(){
         email:r.email||'',
         name:r.name||'',
         country:r.country||'',
+        region:r.country||'',
         affinity:r.affinity||'',
         langs:r.langs||[],
         zaravalar:r.dialects||[],
@@ -1040,9 +1041,11 @@ async function loadApps(){
         krd_number:r.krd_number||'',
         did:r.did||'',
         serial:r.serial||null,
+        kurNo:r.notes||('KUR-'+String(r.serial||0).padStart(5,'0')),
         pw_hash:r.pw_hash||null,
         pw_reset:r.pw_reset||false,
         first_login:r.first_login||false,
+        issued:r.approved_at?r.approved_at.slice(0,10):'',
         _sb_id:r.id
       }));
     }
@@ -1691,7 +1694,7 @@ function approveApp(i){
   // Save to Supabase
   sbFetch('applications?twitter=eq.'+a.twitter,{
     method:'PATCH',
-    body:JSON.stringify({status:'approved',krd_number:id,serial:serial,did:apps[idx].did,approved_at:new Date().toISOString(),first_login:true})
+    body:JSON.stringify({status:'approved',krd_number:id,serial:serial,did:apps[idx].did,approved_at:new Date().toISOString(),first_login:true,notes:kurNo})
   }).then(()=>loadApps()).catch(e=>console.error(e));
   renderAdminList();
   // Email reminder
@@ -2047,13 +2050,15 @@ function startStatusPoll(){
   statusPollTimer=setInterval(async()=>{
     if(!itw)return;
     try{
-      const res=await sbFetch('applications?twitter=eq.'+itw+'&select=status,first_login,krd_number,did,serial,pw_reset');
+      const res=await sbFetch('applications?twitter=eq.'+itw+'&select=status,first_login,krd_number,did,serial,pw_reset,notes,approved_at');
       const data=await res.json();
       if(!data||!data[0])return;
       const r=data[0];
+      const kurNo=r.notes||('KUR-'+String(r.serial||0).padStart(5,'0'));
+      const issued=r.approved_at?r.approved_at.slice(0,10):'';
       const idx=apps.findIndex(a=>a.twitter===itw);
-      if(idx>=0)apps[idx]={...apps[idx],status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial};
-      if(myApp)myApp={...myApp,status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial};
+      if(idx>=0)apps[idx]={...apps[idx],status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial,kurNo,issued};
+      if(myApp)myApp={...myApp,status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial,kurNo,issued};
       if(r.status==='approved'){
         stopStatusPoll();
         if(r.first_login){
@@ -2458,32 +2463,47 @@ function captureElement(el, filename, action){
       spinEls.forEach(s=>s.style.animation='');
       if(shine)shine.style.display='';
 
-      // Convert dataUrl to blob
-      fetch(dataUrl).then(r=>r.blob()).then(blob=>{
-        if(action==='download'){
-          const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
-        } else if(action==='share'){
-          const dlUrl=URL.createObjectURL(blob);
-          if(navigator.share&&navigator.canShare){
-            const file=new File([blob],filename,{type:'image/png'});
-            if(navigator.canShare({files:[file]})){
-              navigator.share({files:[file],title:'nasKURD',text:'Nasnameya Kurdî Ya Dîjîtal'}).catch(()=>{
+      // Apply rounded corners
+      const img=new Image();
+      img.onload=function(){
+        const cv=document.createElement('canvas');
+        cv.width=w;cv.height=h;
+        const ctx=cv.getContext('2d');
+        const r=22*scale;
+        ctx.beginPath();
+        ctx.moveTo(r,0);ctx.lineTo(w-r,0);ctx.quadraticCurveTo(w,0,w,r);
+        ctx.lineTo(w,h-r);ctx.quadraticCurveTo(w,h,w-r,h);
+        ctx.lineTo(r,h);ctx.quadraticCurveTo(0,h,0,h-r);
+        ctx.lineTo(0,r);ctx.quadraticCurveTo(0,0,r,0);
+        ctx.closePath();ctx.clip();
+        ctx.drawImage(img,0,0,w,h);
+        cv.toBlob(blob=>{
+          if(action==='download'){
+            const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
+          } else if(action==='share'){
+            const dlUrl=URL.createObjectURL(blob);
+            if(navigator.share&&navigator.canShare){
+              const file=new File([blob],filename,{type:'image/png'});
+              if(navigator.canShare({files:[file]})){
+                navigator.share({files:[file],title:'nasKURD',text:'Nasnameya Kurdî Ya Dîjîtal'}).catch(()=>{
+                  const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
+                });
+              } else {
                 const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
-              });
+              }
             } else {
               const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
             }
-          } else {
-            const a=document.createElement('a');a.download=filename;a.href=dlUrl;a.click();
+          } else if(action==='copy'){
+            navigator.clipboard.write([new ClipboardItem({'image/png':blob})]).then(()=>{
+              showAdminNotif(lang==='ku'?'✓ Wêne hat kopîkirin':'✓ Image copied!');
+            }).catch(()=>{
+              const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
+            });
           }
-        } else if(action==='copy'){
-          navigator.clipboard.write([new ClipboardItem({'image/png':blob})]).then(()=>{
-            showAdminNotif(lang==='ku'?'✓ Wêne hat kopîkirin':'✓ Image copied!');
-          }).catch(()=>{
-            const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
-          });
-        }
-      });
+        },'image/png');
+      };
+      img.src=dataUrl;
     }).catch(err=>{
       spinEls.forEach(s=>s.style.animation='');
       if(shine)shine.style.display='';
