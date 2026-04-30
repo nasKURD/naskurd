@@ -2447,15 +2447,15 @@ function captureElement(el, filename, action){
     const shine=el.querySelector('.card-shine');
     if(shine)shine.style.display='none';
 
-    // Stop all animations and 3D transforms on the card itself
     const origAnim=el.style.animation;
     const origTransformStyle=el.style.transformStyle;
     const origTransform=el.style.transform;
+    const origBoxShadow=el.style.boxShadow;
     el.style.animation='none';
     el.style.transformStyle='flat';
     el.style.transform='none';
+    el.style.boxShadow='none';
 
-    // Small delay to let browser settle after stopping animations
     setTimeout(()=>{
       window.html2canvas(el,{
         scale:4,
@@ -2463,32 +2463,35 @@ function captureElement(el, filename, action){
         logging:false,
         useCORS:true,
         allowTaint:true,
-        foreignObjectRendering:false
+        foreignObjectRendering:false,
+        onclone:(doc,clone)=>{
+          // Fix SVG gradient references that html2canvas can't render
+          clone.querySelectorAll('[fill^="url("]').forEach(el=>{
+            const fill=el.getAttribute('fill');
+            if(fill.includes('rg_card')||fill.includes('roj'))el.setAttribute('fill','#D4A82A');
+            else if(fill.includes('ring'))el.setAttribute('fill','#F5C518');
+            else el.setAttribute('fill','#D4A82A');
+          });
+          clone.querySelectorAll('[stroke^="url("]').forEach(el=>{
+            const stroke=el.getAttribute('stroke');
+            if(stroke.includes('ring'))el.setAttribute('stroke','#F5C518');
+            else el.setAttribute('stroke','#D4A82A');
+          });
+          // Stop ring-pause animation too
+          clone.querySelectorAll('[style*="ring-pause"]').forEach(el=>{
+            el.style.animation='none';
+            el.style.transform='rotate(0deg)';
+          });
+        }
       }).then(cv=>{
-        // Restore
         el.style.animation=origAnim;
         el.style.transformStyle=origTransformStyle;
         el.style.transform=origTransform;
+        el.style.boxShadow=origBoxShadow;
         spinEls.forEach(s=>s.style.animation='');
         if(shine)shine.style.display='';
 
-        // Apply rounded corners
-        const w=cv.width, h=cv.height;
-        const out=document.createElement('canvas');
-        out.width=w; out.height=h;
-        const ctx=out.getContext('2d');
-        ctx.clearRect(0,0,w,h);
-        const r=16*4;
-        ctx.beginPath();
-        ctx.moveTo(r,0);
-        ctx.lineTo(w-r,0);ctx.arcTo(w,0,w,r,r);
-        ctx.lineTo(w,h-r);ctx.arcTo(w,h,w-r,h,r);
-        ctx.lineTo(r,h);ctx.arcTo(0,h,0,h-r,r);
-        ctx.lineTo(0,r);ctx.arcTo(0,0,r,0,r);
-        ctx.closePath();ctx.clip();
-        ctx.drawImage(cv,0,0);
-
-        out.toBlob(blob=>{
+        cv.toBlob(blob=>{
           if(!blob)return;
           if(action==='download'){
             const a=document.createElement('a');a.download=filename;a.href=URL.createObjectURL(blob);a.click();
@@ -2518,11 +2521,12 @@ function captureElement(el, filename, action){
         el.style.animation=origAnim;
         el.style.transformStyle=origTransformStyle;
         el.style.transform=origTransform;
+        el.style.boxShadow=origBoxShadow;
         spinEls.forEach(s=>s.style.animation='');
         if(shine)shine.style.display='';
         console.error('Capture error:',err);
       });
-    }, 100);
+    },100);
   }
   if(!window.html2canvas){
     const s=document.createElement('script');
