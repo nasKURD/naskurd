@@ -2041,6 +2041,41 @@ function checkApproval(){
   }
 }
 
+let statusPollTimer=null;
+function startStatusPoll(){
+  if(statusPollTimer)clearInterval(statusPollTimer);
+  statusPollTimer=setInterval(async()=>{
+    if(!itw)return;
+    try{
+      const res=await sbFetch('applications?twitter=eq.'+itw+'&select=status,first_login,krd_number,did,serial,pw_reset');
+      const data=await res.json();
+      if(!data||!data[0])return;
+      const r=data[0];
+      const idx=apps.findIndex(a=>a.twitter===itw);
+      if(idx>=0)apps[idx]={...apps[idx],status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial};
+      if(myApp)myApp={...myApp,status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial};
+      if(r.status==='approved'){
+        stopStatusPoll();
+        if(r.first_login){
+          sbFetch('applications?twitter=eq.'+itw,{method:'PATCH',body:JSON.stringify({first_login:false})}).catch(()=>{});
+          goCongrats();
+        } else {
+          goWallet();
+        }
+      } else if(r.status==='rejected'){
+        stopStatusPoll();
+        show('rejected');setLg(lang);startRejCountdown();
+      } else if(r.status==='revoked'){
+        stopStatusPoll();
+        show('revoked');
+      }
+    }catch(e){}
+  },10000);
+}
+function stopStatusPoll(){
+  if(statusPollTimer){clearInterval(statusPollTimer);statusPollTimer=null;}
+}
+
 function startCountdown(){
   if(countdownTimer)clearInterval(countdownTimer);
   // Check localStorage for existing countdown for this user
@@ -2060,11 +2095,12 @@ function startCountdown(){
   }
   countdownTimer=setInterval(updateCountdown,1000);
   updateCountdown();
+  startStatusPoll();
 }
 
 function stopCountdown(){
   if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
-  // Clear localStorage countdown
+  stopStatusPoll();
   if(itw)localStorage.removeItem('naskurd_cd_'+itw);
   countdownEnd=null;
 }
