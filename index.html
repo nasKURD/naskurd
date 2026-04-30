@@ -977,6 +977,13 @@ async function loadApps(){
         _sb_id:r.id
       }));
     }
+    appsLoaded=true;
+    // If OAuth return is waiting, route now
+    if(window._pendingOAuthHandle){
+      const h=window._pendingOAuthHandle;
+      window._pendingOAuthHandle=null;
+      routeAfterOAuth(h);
+    }
   }catch(e){console.error('loadApps error',e);}
 }
 
@@ -2557,6 +2564,31 @@ function copyRojame(){
 function startTwitterOAuth(){
   window.location.href='/api/auth/twitter';
 }
+function routeAfterOAuth(handle){
+  itw=handle;
+  const ex=apps.find(a=>a.twitter===handle);
+  isNewUser=!ex;
+  if(!ex){
+    hashVal='oauth_verified';
+    langs=[];zar=[];aff='';rt='';
+    show('reg');setLg(lang);initChips();initHeremBtns();
+    setTimeout(()=>{initHeremBtns();},200);
+    return;
+  }
+  myApp=ex;
+  if(ex.status==='approved'){
+    if(ex.first_login){
+      sbFetch('applications?twitter=eq.'+handle,{method:'PATCH',body:JSON.stringify({first_login:false})}).catch(()=>{});
+      apps[apps.findIndex(a=>a.twitter===handle)].first_login=false;
+      goCongrats();return;
+    }
+    goWallet();return;
+  }
+  if(ex.status==='revoked'){show('revoked');return;}
+  if(ex.status==='rejected'){show('rejected');setLg(lang);startRejCountdown();return;}
+  document.getElementById('pending-tw').textContent='@'+handle;
+  show('pending');startCountdown();setLg(lang);
+}
 function handleTwitterOAuthReturn(){
   const params=new URLSearchParams(window.location.search);
   const handle=params.get('tw_handle');
@@ -2577,46 +2609,21 @@ function handleTwitterOAuthReturn(){
   }
 
   if(handle&&verified==='1'){
-    itw=handle;
     window._twOAuthVerified=handle;
     const inp=document.getElementById('tw-inp');
     if(inp)inp.value='@'+handle;
-
-    // Show verified badge briefly
     const badge=document.getElementById('tw-verified-badge');
     const badgeHandle=document.getElementById('tw-verified-handle');
     if(badge){badge.style.display='block';}
     if(badgeHandle){badgeHandle.textContent='@'+handle;}
     show('lock');setLg(lang);
 
-    // Route based on user status
-    setTimeout(()=>{
-      const ex=apps.find(a=>a.twitter===handle);
-      isNewUser=!ex;
-      if(!ex){
-        // New user → registration form
-        hashVal='oauth_verified';
-        langs=[];zar=[];aff='';rt='';
-        show('reg');setLg(lang);initChips();initHeremBtns();
-        setTimeout(()=>{initHeremBtns();},200);
-        return;
-      }
-      // Existing user → route by status
-      myApp=ex;
-      if(ex.status==='approved'){
-        if(ex.first_login){
-          sbFetch('applications?twitter=eq.'+handle,{method:'PATCH',body:JSON.stringify({first_login:false})}).catch(()=>{});
-          apps[apps.findIndex(a=>a.twitter===handle)].first_login=false;
-          goCongrats();return;
-        }
-        goWallet();return;
-      }
-      if(ex.status==='revoked'){show('revoked');return;}
-      if(ex.status==='rejected'){show('rejected');setLg(lang);startRejCountdown();return;}
-      // Pending
-      document.getElementById('pending-tw').textContent='@'+handle;
-      show('pending');startCountdown();setLg(lang);
-    },800);
+    // Wait for apps to load then route
+    if(appsLoaded){
+      setTimeout(()=>routeAfterOAuth(handle),600);
+    } else {
+      window._pendingOAuthHandle=handle;
+    }
   }
 }
 (function(){handleTwitterOAuthReturn();})();
