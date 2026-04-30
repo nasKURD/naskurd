@@ -1825,27 +1825,32 @@ function goWallet(){
           })()}
         </svg>
         <!-- Mikro metin şeridi -->
-        <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:.12" viewBox="0 0 856 540" preserveAspectRatio="xMidYMid slice">
+        <div style="position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:.14;overflow:hidden">
           ${(()=>{
-            let s='';
             const txt='NASNAMEYA DÎJÎTAL YA KURDÎ · DÎROKÊ DE YEKEMÎN · ';
-            // Multiple micro-text lines at different angles
+            let line=''; for(let j=0;j<20;j++) line+=txt;
+            let s='';
+            // Diagonal lines
             for(let i=0;i<8;i++){
-              const y=35+i*70;
-              let line='';
-              for(let j=0;j<12;j++) line+=txt;
-              s+=`<text y="${y}" font-family="Arial" font-size="6" fill="#8B6010" letter-spacing="2" font-weight="600" transform="rotate(-8,428,270)">${line}</text>`;
-            }
-            // Horizontal micro strip
-            for(let i=0;i<5;i++){
-              const y=50+i*110;
-              let line='';
-              for(let j=0;j<20;j++) line+=txt;
-              s+=`<text y="${y}" font-family="Arial" font-size="5" fill="#1B7040" letter-spacing="1.5" opacity=".8">${line}</text>`;
+              const top=35+i*70;
+              s+=`<div style="position:absolute;top:${top}px;left:-200px;right:-200px;font-family:Arial,sans-serif;font-size:6px;font-weight:600;color:#8B6010;letter-spacing:2px;white-space:nowrap;transform:rotate(-8deg)">${line}</div>`;
             }
             return s;
           })()}
-        </svg>
+        </div>
+        <div style="position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:.1;overflow:hidden">
+          ${(()=>{
+            const txt='NASNAMEYA DÎJÎTAL YA KURDÎ · DÎROKÊ DE YEKEMÎN · ';
+            let line=''; for(let j=0;j<25;j++) line+=txt;
+            let s='';
+            // Horizontal lines
+            for(let i=0;i<5;i++){
+              const top=50+i*110;
+              s+=`<div style="position:absolute;top:${top}px;left:-200px;right:-200px;font-family:Arial,sans-serif;font-size:5px;color:#1B7040;letter-spacing:1.5px;white-space:nowrap">${line}</div>`;
+            }
+            return s;
+          })()}
+        </div>
         <div style="position:absolute;right:-40px;top:70%;transform:translateY(-50%);z-index:2;pointer-events:none;opacity:.1">
           <svg width="220" height="220" viewBox="0 0 38 38">
             <defs><radialGradient id="roj-embed" cx="40%" cy="38%" r="62%"><stop offset="0%" stop-color="#C4A24C"/><stop offset="50%" stop-color="#A07828"/><stop offset="100%" stop-color="#6B5010"/></radialGradient></defs>
