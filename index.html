@@ -104,6 +104,18 @@ select option{background:#041E32;color:#f0e6cc}
 
 <!-- LOCK -->
 <!-- INVITE -->
+<!-- Loading Overlay -->
+<div id="s-loading" style="position:fixed;inset:0;background:rgba(2,8,18,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+  <svg width="52" height="52" viewBox="0 0 52 52">
+    <defs><radialGradient id="rg-ld" cx="40%" cy="38%" r="62%"><stop offset="0%" stop-color="#FFE97A"/><stop offset="45%" stop-color="#D4A82A"/><stop offset="100%" stop-color="#8B6010"/></radialGradient></defs>
+    <g transform="translate(26,26)"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 0 0" to="360 0 0" dur="1.5s" repeatCount="indefinite" additive="sum"/>
+      <polygon points="0,0 0,-7 1.6,-10.8" fill="url(#rg-ld)"/><polygon points="0,0 2.1,-6.8 4.8,-9.9" fill="url(#rg-ld)"/><polygon points="0,0 3.9,-5.8 7.5,-8.1" fill="url(#rg-ld)"/><polygon points="0,0 5.4,-4.4 9.5,-5.5" fill="url(#rg-ld)"/><polygon points="0,0 6.5,-2.6 10.7,-2.5" fill="url(#rg-ld)"/><polygon points="0,0 7,-0.5 10.9,0.8" fill="url(#rg-ld)"/><polygon points="0,0 6.9,1.6 10.2,4" fill="url(#rg-ld)"/><polygon points="0,0 6.1,3.5 8.6,6.9" fill="url(#rg-ld)"/><polygon points="0,0 4.7,5.2 6.2,9" fill="url(#rg-ld)"/><polygon points="0,0 3.1,6.4 3.2,10.5" fill="url(#rg-ld)"/><polygon points="0,0 1.1,7 0,10.9" fill="url(#rg-ld)"/><polygon points="0,0 -1.1,7 -3.2,10.5" fill="url(#rg-ld)"/><polygon points="0,0 -3.1,6.4 -6.2,9" fill="url(#rg-ld)"/><polygon points="0,0 -4.7,5.2 -8.6,6.9" fill="url(#rg-ld)"/><polygon points="0,0 -6.1,3.5 -10.2,4" fill="url(#rg-ld)"/><polygon points="0,0 -6.9,1.6 -10.9,0.8" fill="url(#rg-ld)"/><polygon points="0,0 -7,-0.5 -10.7,-2.5" fill="url(#rg-ld)"/><polygon points="0,0 -6.5,-2.6 -9.5,-5.5" fill="url(#rg-ld)"/><polygon points="0,0 -5.4,-4.4 -7.5,-8.1" fill="url(#rg-ld)"/><polygon points="0,0 -3.9,-5.8 -4.8,-9.9" fill="url(#rg-ld)"/><polygon points="0,0 -2.1,-6.8 -1.6,-10.8" fill="url(#rg-ld)"/>
+    </g>
+    <circle cx="26" cy="26" r="4" fill="url(#rg-ld)"/>
+  </svg>
+  <div id="loading-txt" style="font-size:11px;color:rgba(196,162,76,.6);letter-spacing:2px;text-transform:uppercase">Barkirin...</div>
+</div>
+
 <div id="s-invite" class="scr on" style="align-items:center;justify-content:center;padding:20px 16px;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
   <div style="width:100%;max-width:380px">
     <div style="background:rgba(2,11,20,.97);border:1px solid rgba(196,162,76,.2);border-radius:20px;padding:20px 20px 24px;box-shadow:0 20px 60px rgba(2,8,18,.8),inset 0 1px 0 rgba(255,255,255,.05);overflow:hidden;position:relative">
@@ -768,9 +780,11 @@ function submitInvite(){
   err.style.display='none';
   if(!v){err.textContent=ku?'Koda vexwendinê binivîse':'Enter invitation code';err.style.display='block';return;}
   // Check invite code against Supabase
+  showLoading(ku?'Kontrolkirin...':'Checking...');
   sbFetch('invite_codes?code=eq.'+encodeURIComponent(v)+'&active=eq.true&select=code')
   .then(r=>r.json())
   .then(data=>{
+    hideLoading();
     if(!data||data.length===0){
       err.textContent=ku?'Koda vexwendinê xelet e':'Invalid invitation code';
       err.style.display='block';inp.value='';
@@ -782,6 +796,7 @@ function submitInvite(){
     }
   })
   .catch(()=>{
+    hideLoading();
     // Fallback to local check if Supabase fails
     if(v!==INVITE_CODE){err.textContent=ku?'Koda vexwendinê xelet e':'Invalid invitation code';err.style.display='block';inp.value='';return;}
     inp.value='';
@@ -1030,14 +1045,28 @@ async function loadApps(){
   }
 }
 
+function hideLoading(){
+  const el=document.getElementById('s-loading');
+  if(el){el.style.opacity='0';el.style.transition='opacity .4s';setTimeout(()=>{el.style.display='none';},400);}
+}
+function showLoading(txt){
+  const el=document.getElementById('s-loading');
+  const t=document.getElementById('loading-txt');
+  if(el){el.style.display='flex';el.style.opacity='1';}
+  if(t&&txt)t.textContent=txt;
+}
+
 try{
 localStorage.removeItem('naskurd_tw');
 localStorage.removeItem('naskurd_hash');
 show('invite');
 setLg(lang);
-loadApps();
-loadInviteCode();
-}catch(e){}
+// Show loading while Supabase loads
+showLoading(lang==='en'?'Loading...':'Barkirin...');
+Promise.all([loadApps(),loadInviteCode()]).finally(()=>{
+  hideLoading();
+});
+}catch(e){hideLoading();}
 
 // Populate selects and chips
 function populateCtrs(){
