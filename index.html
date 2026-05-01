@@ -772,14 +772,76 @@ async function sbFetch(path, options={}) {
 // Global state variables
 
 
+// ── Rate Limiting ─────────────────────────────────────────────
+const RL_KEY='naskurd_rl';
+const RL_MAX=3;
+const RL_LOCK=10*60*1000; // 10 dakika
+
+function getRateLimit(){
+  try{
+    const d=JSON.parse(localStorage.getItem(RL_KEY)||'{}');
+    return {count:d.count||0,lockUntil:d.lockUntil||0};
+  }catch(e){return {count:0,lockUntil:0};}
+}
+function setRateLimit(count,lockUntil){
+  localStorage.setItem(RL_KEY,JSON.stringify({count,lockUntil}));
+}
+function resetRateLimit(){
+  localStorage.removeItem(RL_KEY);
+}
+
+let rlTimer=null;
+function startLockCountdown(){
+  if(rlTimer)clearInterval(rlTimer);
+  const btn=document.getElementById('inv-btn');
+  const err=document.getElementById('inv-err');
+  const inp=document.getElementById('inv-inp');
+  if(btn)btn.disabled=true;
+  if(inp)inp.disabled=true;
+  rlTimer=setInterval(()=>{
+    const ku=lang==='ku';
+    const {lockUntil}=getRateLimit();
+    const remaining=lockUntil-Date.now();
+    if(remaining<=0){
+      clearInterval(rlTimer);
+      resetRateLimit();
+      if(btn){btn.disabled=false;btn.style.opacity='1';}
+      if(inp){inp.disabled=false;}
+      if(err){err.style.display='none';}
+      return;
+    }
+    const m=Math.floor(remaining/60000);
+    const s=Math.floor((remaining%60000)/1000);
+    const t=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    if(err){
+      err.textContent=(ku?'🔒 Gelek ceribandin! ':'🔒 Too many attempts! ')+(ku?t+' bimîne':t+' remaining');
+      err.style.display='block';
+      err.style.color='#E05050';
+    }
+    if(btn)btn.style.opacity='0.4';
+  },1000);
+}
+
+function checkLockOnLoad(){
+  const {lockUntil}=getRateLimit();
+  if(lockUntil>Date.now()) startLockCountdown();
+}
+checkLockOnLoad();
+
 function submitInvite(){
   const inp=document.getElementById('inv-inp');
   const err=document.getElementById('inv-err');
   const ku=lang==='ku';
   if(!inp)return;
+
+  // Check lock
+  const rl=getRateLimit();
+  if(rl.lockUntil>Date.now()){startLockCountdown();return;}
+
   const v=inp.value.trim();
   err.style.display='none';
   if(!v){err.textContent=ku?'Koda vexwendinê binivîse':'Enter invitation code';err.style.display='block';return;}
+
   // Check invite code against Supabase
   showLoading(ku?'Kontrolkirin...':'Checking...');
   sbFetch('invite_codes?code=eq.'+encodeURIComponent(v)+'&active=eq.true&select=code')
@@ -787,9 +849,27 @@ function submitInvite(){
   .then(data=>{
     hideLoading();
     if(!data||data.length===0){
-      err.textContent=ku?'Koda vexwendinê xelet e':'Invalid invitation code';
-      err.style.display='block';inp.value='';
+      // Wrong code - increment counter
+      const newCount=rl.count+1;
+      const remaining=RL_MAX-newCount;
+      if(newCount>=RL_MAX){
+        const lockUntil=Date.now()+RL_LOCK;
+        setRateLimit(newCount,lockUntil);
+        startLockCountdown();
+      } else {
+        setRateLimit(newCount,0);
+        if(remaining===1){
+          err.textContent=ku?'⚠️ Koda xelet e! 1 mafê te maye':'⚠️ Wrong code! 1 attempt remaining';
+          err.style.color='#E05050';
+        } else {
+          err.textContent=ku?'Koda vexwendinê xelet e':'Invalid invitation code';
+          err.style.color='#E05050';
+        }
+        err.style.display='block';
+        inp.value='';
+      }
     } else {
+      resetRateLimit();
       localStorage.setItem('naskurd_invite',v);
       inp.value='';
       show('manifest');
@@ -798,8 +878,21 @@ function submitInvite(){
   })
   .catch(()=>{
     hideLoading();
-    // Fallback to local check if Supabase fails
-    if(v!==INVITE_CODE){err.textContent=ku?'Koda vexwendinê xelet e':'Invalid invitation code';err.style.display='block';inp.value='';return;}
+    const newCount=rl.count+1;
+    const remaining=RL_MAX-newCount;
+    if(v!==INVITE_CODE){
+      if(newCount>=RL_MAX){
+        const lockUntil=Date.now()+RL_LOCK;
+        setRateLimit(newCount,lockUntil);
+        startLockCountdown();
+      } else {
+        setRateLimit(newCount,0);
+        err.textContent=remaining===1?(ku?'⚠️ Koda xelet e! 1 mafê te maye':'⚠️ Wrong code! 1 attempt remaining'):(ku?'Koda vexwendinê xelet e':'Invalid invitation code');
+        err.style.display='block';inp.value='';
+      }
+      return;
+    }
+    resetRateLimit();
     inp.value='';
     show('manifest');
     setLg(lang);
