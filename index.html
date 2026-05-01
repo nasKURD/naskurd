@@ -423,6 +423,7 @@ select option{background:#041E32;color:#f0e6cc}
           </div>
         </div>
       </div>
+      <div style="margin-top:10px;text-align:center"><div id="pend-last-check" style="font-size:9px;color:rgba(196,162,76,.25);letter-spacing:.5px"></div></div>
       <div id="pend-approved" style="display:none;margin-top:20px">
         <div style="width:70px;height:70px;border-radius:50%;background:rgba(30,138,110,.15);border:3px solid rgba(30,138,110,.6);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#4EC87A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2098,6 +2099,14 @@ function startStatusPoll(){
       const idx=apps.findIndex(a=>a.twitter===itw);
       if(idx>=0)apps[idx]={...apps[idx],status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial,kurNo,issued};
       if(myApp)myApp={...myApp,status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial,kurNo,issued};
+      // Show last check time
+      const now=new Date();
+      const hh=String(now.getHours()).padStart(2,'0');
+      const mm=String(now.getMinutes()).padStart(2,'0');
+      const ss=String(now.getSeconds()).padStart(2,'0');
+      const lc=document.getElementById('pend-last-check');
+      if(lc)lc.textContent=(lang==='en'?'Last check: ':'Dawî kontrol: ')+hh+':'+mm+':'+ss;
+
       if(r.status==='approved'){
         stopStatusPoll();
         if(r.first_login){
