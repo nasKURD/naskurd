@@ -1361,6 +1361,19 @@ function submitReg(){
   }).then(res => {
     if(!res.ok) res.json().then(e => console.error(e));
   }).catch(e => console.error(e));
+  // Send email notification to admin
+  fetch('/api/send-email', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      type: 'new_application',
+      twitter: a.twitter,
+      name: a.name,
+      email: a.email,
+      country: a.country,
+      region: a.affinity
+    })
+  }).catch(e => console.error('Email error:', e));
   document.getElementById('pending-tw').textContent='@'+itw;
   show('pending');startCountdown();setLg(lang);
 }
