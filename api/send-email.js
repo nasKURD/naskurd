@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
             <tr><td style="padding:8px 0;color:#C4A24C">E-mail</td><td style="padding:8px 0">${email || '—'}</td></tr>
           </table>
           <div style="margin-top:20px">
-            <a href="https://rojtevkurdi.vercel.app/admin" style="background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Admin Panelê Veke →</a>
+            <a href="https://naskurd.com" style="background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Admin Panelê Veke →</a>
           </div>
         </div>
         <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A)"></div>
@@ -51,6 +51,21 @@ module.exports = async function handler(req, res) {
         <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A)"></div>
       </div>
     `;
+  } else if (type === 'rejected') {
+    to = email;
+    subject = `nasKURD — Serlêdana te hate nirxandin`;
+    html = `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#020B18;color:#eee;border-radius:12px;overflow:hidden">
+        <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040)"></div>
+        <div style="padding:24px;text-align:center">
+          <h2 style="color:#E05050;margin:0 0 8px">Serlêdana te hat nirxandin</h2>
+          <p style="color:#C4A24C;font-size:16px;font-weight:700;margin:0 0 16px">@${twitter}</p>
+          <p style="color:#aaa;margin:0 0 20px">Mixabin serlêdana te vê carê nehat pejirandin. Ji bo agahdariya bêtir bi @rojtevkurdi re têkilî bigire.</p>
+          <p style="color:rgba(196,162,76,.4);font-size:10px;margin-top:24px">@rojtevkurdi · @torakurdakurdi · @_nasKURD</p>
+        </div>
+        <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A)"></div>
+      </div>
+    `;
   } else {
     return res.status(400).json({ error: 'Invalid type' });
   }
@@ -63,7 +78,7 @@ module.exports = async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'nasKURD <onboarding@resend.dev>',
+        from: 'nasKURD <noreply@naskurd.com>',
         to: [to],
         subject,
         html
