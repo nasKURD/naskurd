@@ -1816,22 +1816,40 @@ function approveApp(i){
     body:JSON.stringify({status:'approved',krd_number:id,serial:serial,did:apps[idx].did,approved_at:new Date().toISOString(),first_login:true,notes:kurNo})
   }).then(()=>loadApps()).catch(e=>console.error(e));
   renderAdminList();
-  // Email reminder
+  // Send approval email to user
   if(a.email){
-    const ku=lang==='ku';
-    const notif=document.getElementById('cancel-notif');
-    const ntxt=document.getElementById('cancel-notif-txt');
-    if(notif&&ntxt){
-      notif.style.background='rgba(30,100,138,.95)';
-      ntxt.innerHTML=ku?`✓ ${a.name} erêkirî! 📧 E-peyam bişîne: ${a.email}`:`✓ ${a.name} approved! 📧 Remember to email: ${a.email}`;
-      notif.style.display='block';
-      setTimeout(()=>{notif.style.display='none';notif.style.background='rgba(192,57,43,.95)';},5000);
-    }
+    fetch('/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'approved',twitter:a.twitter,name:a.name,email:a.email})
+    }).then(()=>{
+      const ku=lang==='ku';
+      const notif=document.getElementById('cancel-notif');
+      const ntxt=document.getElementById('cancel-notif-txt');
+      if(notif&&ntxt){
+        notif.style.background='rgba(30,100,138,.95)';
+        ntxt.innerHTML=ku?`✓ ${a.name} erêkirî! 📧 E-peyam hat şandin.`:`✓ ${a.name} approved! 📧 Email sent.`;
+        notif.style.display='block';
+        setTimeout(()=>{notif.style.display='none';notif.style.background='rgba(192,57,43,.95)';},4000);
+      }
+    }).catch(e=>console.error('Email error:',e));
   }
 }
-function rejectApp(i){const filt=apps.filter(a=>(a.status||'pending')==='pending');const a=filt[i];if(!a)return;const idx=apps.indexOf(a);apps[idx]={...a,status:'rejected'};
+function rejectApp(i){
+  const filt=apps.filter(a=>(a.status||'pending')==='pending');
+  const a=filt[i];if(!a)return;
+  const idx=apps.indexOf(a);
+  apps[idx]={...a,status:'rejected'};
   sbFetch('applications?twitter=eq.'+a.twitter,{method:'PATCH',body:JSON.stringify({status:'rejected',rejected_at:new Date().toISOString()})}).then(()=>loadApps()).catch(e=>console.error(e));
-  renderAdminList();}
+  if(a.email){
+    fetch('/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'rejected',twitter:a.twitter,name:a.name,email:a.email})
+    }).catch(e=>console.error('Email error:',e));
+  }
+  renderAdminList();
+}
 function revokeApp(i){const filt=apps.filter(a=>a.status==='approved');const a=filt[i];if(!a)return;const idx=apps.indexOf(a);apps[idx]={...a,status:'revoked'};
   sbFetch('applications?twitter=eq.'+a.twitter,{method:'PATCH',body:JSON.stringify({status:'revoked'})}).then(()=>loadApps()).catch(e=>console.error(e));
   renderAdminList();}
