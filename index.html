@@ -2215,7 +2215,7 @@ function startStatusPoll(){
   statusPollTimer=setInterval(async()=>{
     if(!itw)return;
     try{
-      const res=await sbFetch('applications?twitter=eq.'+itw+'&select=status,first_login,krd_number,did,serial,pw_reset,notes,approved_at');
+      const res=await sbFetch('applications?twitter=eq.'+itw+'&select=status,first_login,krd_number,did,serial,pw_reset,notes,approved_at,submitted_at');
       const data=await res.json();
       if(!data||!data[0])return;
       const r=data[0];
@@ -2223,7 +2223,7 @@ function startStatusPoll(){
       const issued=r.approved_at?r.approved_at.slice(0,10):'';
       const idx=apps.findIndex(a=>a.twitter===itw);
       if(idx>=0)apps[idx]={...apps[idx],status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial,kurNo,issued};
-      if(myApp)myApp={...myApp,status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial,kurNo,issued};
+      if(myApp)myApp={...myApp,status:r.status,first_login:r.first_login,id:r.krd_number,did:r.did,serial:r.serial,kurNo,issued,submitted_at:r.submitted_at||myApp.submitted_at};
       // Show last check time
       const now=new Date();
       const hh=String(now.getHours()).padStart(2,'0');
