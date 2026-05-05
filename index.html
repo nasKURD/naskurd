@@ -2979,52 +2979,79 @@ function backToTw(){
 <!-- Verify Screen -->
 <style>
 @keyframes roj-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.roj-sun{position:relative;display:inline-block;width:100px;height:100px;margin-bottom:12px}
-.roj-rays{position:absolute;inset:0;animation:roj-spin 12s linear infinite}
-.roj-rays svg{width:100px;height:100px}
-.roj-core{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+@keyframes roj-spin-rev{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+.roj-sun{position:relative;display:inline-block;width:130px;height:130px;margin-bottom:12px}
+.roj-humans{position:absolute;inset:0;animation:roj-spin 20s linear infinite}
+.roj-humans svg{width:130px;height:130px}
+.roj-rays-wrap{position:absolute;inset:15px;animation:roj-spin 6s linear infinite}
+.roj-rays-wrap svg{width:100px;height:100px}
+.roj-core{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 </style>
 <div id="s-verify" class="scr" style="align-items:center;justify-content:center;padding:24px;flex-direction:column;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
   <div style="max-width:420px;width:100%;text-align:center">
     <div style="height:20px"></div>
     <div class="roj-sun">
-      <div class="roj-rays">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- 21 human figure rays -->
-          <g fill="#F5C518" opacity="0.9">
-            <!-- Each figure: head circle + body line, rotated around center -->
-            <!-- We place figures at radius ~42 from center, each rotated by 360/21 = 17.14 deg -->
-            <g transform="rotate(0 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(17.14 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(34.28 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(51.42 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(68.56 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(85.7 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(102.84 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(119.98 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(137.12 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(154.26 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(171.4 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(188.54 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(205.68 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(222.82 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(239.96 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(257.1 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(274.24 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(291.38 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(308.52 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(325.66 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
-            <g transform="rotate(342.8 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+      <!-- Outer: human figures rotating slowly -->
+      <div class="roj-humans">
+        <svg viewBox="0 0 130 130" fill="#F5C518" stroke="#F5C518" xmlns="http://www.w3.org/2000/svg" opacity="0.9">
+          <g>
+            <g transform="rotate(0 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(17.14 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(34.28 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(51.42 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(68.56 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(85.7 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(102.84 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(119.98 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(137.12 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(154.26 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(171.4 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(188.54 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(205.68 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(222.82 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(239.96 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(257.1 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(274.24 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(291.38 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(308.52 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(325.66 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
+            <g transform="rotate(342.8 65 65)"><circle cx="65" cy="8" r="2.2"/><rect x="64.1" y="10.4" width="1.8" height="5.5" rx="0.9"/><line x1="64.1" y1="12.5" x2="61" y2="14.2" stroke-width="1.3" stroke-linecap="round"/><line x1="65.9" y1="12.5" x2="69" y2="14.2" stroke-width="1.3" stroke-linecap="round"/></g>
           </g>
         </svg>
       </div>
-      <div class="roj-core">
-        <svg viewBox="0 0 100 100" width="100" height="100">
-          <circle cx="50" cy="50" r="18" fill="#F5C518" opacity="0.95"/>
+      <!-- Inner: Roj sun rays rotating faster -->
+      <div class="roj-rays-wrap">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- 21 thin pointed rays - Roj style -->
+          <g fill="#F5C518">
+            <g transform="rotate(0 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(17.14 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(34.28 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(51.42 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(68.56 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(85.7 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(102.84 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(119.98 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(137.12 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(154.26 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(171.4 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(188.54 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(205.68 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(222.82 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(239.96 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(257.1 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(274.24 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(291.38 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(308.52 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(325.66 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+            <g transform="rotate(342.8 50 50)"><polygon points="50,18 51.2,32 48.8,32"/></g>
+          </g>
+          <!-- Sun core circle -->
+          <circle cx="50" cy="50" r="17" fill="#F5C518"/>
           <circle cx="50" cy="50" r="13" fill="#E8A800"/>
         </svg>
       </div>
-    </div>
+    </div>    </div>
     <div style="font-size:11px;color:#C4A24C;letter-spacing:2px;font-weight:800;margin-bottom:2px">NASKURD · NASNAMEYA ÇANDA KURDÎ A DÎJÎTAL</div>
     <div style="font-size:10px;color:rgba(196,162,76,.6);letter-spacing:1px;margin-bottom:20px">NASKURD · KURDISH CULTURAL DIGITAL IDENTITY</div>
     <div id="vfy-name" style="font-size:24px;font-weight:800;color:#eee;margin:0 0 4px"></div>
@@ -3045,7 +3072,7 @@ function backToTw(){
         <span id="vfy-date" style="color:#eee;font-size:13px"></span>
       </div>
     </div>
-    <a href="https://naskurd.com" style="display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">nasKURD.com →</a>
+    <a href="https://naskurd.com" style="display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">naskurd.com →</a>
     <div id="vfy-error" style="display:none;color:#E05050;margin-top:16px;font-size:14px">Ev nasname nehat dîtin an hêj nehat erêkirin.<br><span style="font-size:12px;color:#888">This identity was not found or not yet verified.</span></div>
   </div>
 </div>
