@@ -2977,62 +2977,73 @@ function backToTw(){
 </div>
 
 <!-- Verify Screen -->
+<style>
+@keyframes roj-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.roj-sun{position:relative;display:inline-block;width:80px;height:80px;margin-bottom:12px}
+.roj-rays{position:absolute;inset:0;animation:roj-spin 8s linear infinite}
+.roj-rays svg{width:80px;height:80px}
+.roj-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px}
+</style>
 <div id="s-verify" class="scr" style="align-items:center;justify-content:center;padding:24px;flex-direction:column;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
-  <div style="max-width:400px;width:100%;text-align:center">
-    <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040);border-radius:4px;margin-bottom:24px"></div>
-    <div style="font-size:40px;margin-bottom:8px">☀️</div>
-    <div style="font-size:13px;color:#C4A24C;letter-spacing:3px;font-weight:700;margin-bottom:4px">NASKURD · NASNAMEYA KURDÎ</div>
-    <div id="vfy-name" style="font-size:22px;font-weight:800;color:#eee;margin:16px 0 4px"></div>
+  <div style="max-width:420px;width:100%;text-align:center">
+    <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040);border-radius:4px;margin-bottom:28px"></div>
+    <div class="roj-sun">
+      <div class="roj-rays">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#F5C518" stroke-width="2" opacity="0.8">
+            <line x1="40" y1="4" x2="40" y2="12"/>
+            <line x1="40" y1="68" x2="40" y2="76"/>
+            <line x1="4" y1="40" x2="12" y2="40"/>
+            <line x1="68" y1="40" x2="76" y2="40"/>
+            <line x1="12.7" y1="12.7" x2="18.5" y2="18.5"/>
+            <line x1="61.5" y1="61.5" x2="67.3" y2="67.3"/>
+            <line x1="67.3" y1="12.7" x2="61.5" y2="18.5"/>
+            <line x1="18.5" y1="61.5" x2="12.7" y2="67.3"/>
+            <line x1="25" y1="5.4" x2="27.6" y2="13"/>
+            <line x1="52.4" y1="67" x2="55" y2="74.6"/>
+            <line x1="5.4" y1="55" x2="13" y2="52.4"/>
+            <line x1="67" y1="27.6" x2="74.6" y2="25"/>
+            <line x1="55" y1="5.4" x2="52.4" y2="13"/>
+            <line x1="27.6" y1="67" x2="25" y2="74.6"/>
+            <line x1="5.4" y1="25" x2="13" y2="27.6"/>
+            <line x1="67" y1="52.4" x2="74.6" y2="55"/>
+            <line x1="14.6" y1="30.4" x2="22" y2="33.2"/>
+            <line x1="58" y1="46.8" x2="65.4" y2="49.6"/>
+            <line x1="30.4" y1="65.4" x2="33.2" y2="58"/>
+            <line x1="46.8" y1="22" x2="49.6" y2="14.6"/>
+            <line x1="65.4" y1="30.4" x2="58" y2="33.2"/>
+            <line x1="22" y1="46.8" x2="14.6" y2="49.6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="roj-emoji">☀️</div>
+    </div>
+    <div style="font-size:11px;color:#C4A24C;letter-spacing:2px;font-weight:800;margin-bottom:2px">NASKURD · NASNAMEYA ÇANDA KURDÎ A DÎJÎTAL</div>
+    <div style="font-size:10px;color:rgba(196,162,76,.6);letter-spacing:1px;margin-bottom:20px">NASKURD · KURDISH CULTURAL DIGITAL IDENTITY</div>
+    <div id="vfy-name" style="font-size:24px;font-weight:800;color:#eee;margin:0 0 4px"></div>
     <div id="vfy-handle" style="font-size:14px;color:#C4A24C;margin-bottom:20px"></div>
-    <div id="vfy-badge" style="display:inline-block;background:linear-gradient(135deg,#1B7040,#2a9a5e);color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:20px">✅ nasKURD Dijital Kimlik Sahibi</div>
+    <div id="vfy-badge" style="display:inline-block;background:linear-gradient(135deg,#1B7040,#2a9a5e);color:#fff;padding:10px 24px;border-radius:24px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:6px">✅ nasKURD Xwediyê Nasnameya Dîjîtal</div>
+    <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:20px;font-style:italic">nasKURD Digital Identity Holder</div>
     <div style="background:rgba(255,255,255,.04);border:1px solid rgba(196,162,76,.2);border-radius:12px;padding:16px;margin-bottom:20px">
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-        <span style="color:#888;font-size:13px">KRD #</span>
+        <span style="color:#888;font-size:12px">KRD #</span>
         <span id="vfy-krd" style="color:#C4A24C;font-weight:700;font-size:13px"></span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-        <span style="color:#888;font-size:13px">Welat</span>
+        <span style="color:#888;font-size:12px">Welat · <span style="color:#666">Country</span></span>
         <span id="vfy-country" style="color:#eee;font-size:13px"></span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:8px 0">
-        <span style="color:#888;font-size:13px">Erêkirî</span>
+        <span style="color:#888;font-size:12px">Erêkirî · <span style="color:#666">Verified</span></span>
         <span id="vfy-date" style="color:#eee;font-size:13px"></span>
       </div>
     </div>
     <a href="https://naskurd.com" style="display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">nasKURD.com →</a>
-    <div id="vfy-error" style="display:none;color:#E05050;margin-top:16px;font-size:14px">Bu kimlik bulunamadı veya henüz onaylanmamış.</div>
+    <div id="vfy-error" style="display:none;color:#E05050;margin-top:16px;font-size:14px">Ev nasname nehat dîtin an hêj nehat erêkirin.<br><span style="font-size:12px;color:#888">This identity was not found or not yet verified.</span></div>
     <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A);border-radius:4px;margin-top:24px"></div>
   </div>
 </div>
 
-<!-- Verify Screen -->
-<div id="s-verify" class="scr" style="align-items:center;justify-content:center;padding:24px;flex-direction:column;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
-  <div style="max-width:400px;width:100%;text-align:center">
-    <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040);border-radius:4px;margin-bottom:24px"></div>
-    <div style="font-size:40px;margin-bottom:8px">☀️</div>
-    <div style="font-size:13px;color:#C4A24C;letter-spacing:3px;font-weight:700;margin-bottom:4px">NASKURD · NASNAMEYA KURDÎ</div>
-    <div id="vfy-name" style="font-size:22px;font-weight:800;color:#eee;margin:16px 0 4px"></div>
-    <div id="vfy-handle" style="font-size:14px;color:#C4A24C;margin-bottom:20px"></div>
-    <div id="vfy-badge" style="display:inline-block;background:linear-gradient(135deg,#1B7040,#2a9a5e);color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:20px">✅ nasKURD Dijital Kimlik Sahibi</div>
-    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(196,162,76,.2);border-radius:12px;padding:16px;margin-bottom:20px">
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-        <span style="color:#888;font-size:13px">KRD #</span>
-        <span id="vfy-krd" style="color:#C4A24C;font-weight:700;font-size:13px"></span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-        <span style="color:#888;font-size:13px">Welat</span>
-        <span id="vfy-country" style="color:#eee;font-size:13px"></span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0">
-        <span style="color:#888;font-size:13px">Erêkirî</span>
-        <span id="vfy-date" style="color:#eee;font-size:13px"></span>
-      </div>
-    </div>
-    <a href="https://naskurd.com" style="display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">nasKURD.com →</a>
-    <div id="vfy-error" style="display:none;color:#E05050;margin-top:16px;font-size:14px">Bu kimlik bulunamadı veya henüz onaylanmamış.</div>
-    <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A);border-radius:4px;margin-top:24px"></div>
-  </div>
-</div>
   <div class="fb-bot"></div>
 
 </body>
