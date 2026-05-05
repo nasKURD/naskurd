@@ -2979,44 +2979,51 @@ function backToTw(){
 <!-- Verify Screen -->
 <style>
 @keyframes roj-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.roj-sun{position:relative;display:inline-block;width:80px;height:80px;margin-bottom:12px}
-.roj-rays{position:absolute;inset:0;animation:roj-spin 8s linear infinite}
-.roj-rays svg{width:80px;height:80px}
-.roj-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px}
+.roj-sun{position:relative;display:inline-block;width:100px;height:100px;margin-bottom:12px}
+.roj-rays{position:absolute;inset:0;animation:roj-spin 12s linear infinite}
+.roj-rays svg{width:100px;height:100px}
+.roj-core{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 </style>
 <div id="s-verify" class="scr" style="align-items:center;justify-content:center;padding:24px;flex-direction:column;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
   <div style="max-width:420px;width:100%;text-align:center">
-    <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040);border-radius:4px;margin-bottom:28px"></div>
+    <div style="height:20px"></div>
     <div class="roj-sun">
       <div class="roj-rays">
-        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g stroke="#F5C518" stroke-width="2" opacity="0.8">
-            <line x1="40" y1="4" x2="40" y2="12"/>
-            <line x1="40" y1="68" x2="40" y2="76"/>
-            <line x1="4" y1="40" x2="12" y2="40"/>
-            <line x1="68" y1="40" x2="76" y2="40"/>
-            <line x1="12.7" y1="12.7" x2="18.5" y2="18.5"/>
-            <line x1="61.5" y1="61.5" x2="67.3" y2="67.3"/>
-            <line x1="67.3" y1="12.7" x2="61.5" y2="18.5"/>
-            <line x1="18.5" y1="61.5" x2="12.7" y2="67.3"/>
-            <line x1="25" y1="5.4" x2="27.6" y2="13"/>
-            <line x1="52.4" y1="67" x2="55" y2="74.6"/>
-            <line x1="5.4" y1="55" x2="13" y2="52.4"/>
-            <line x1="67" y1="27.6" x2="74.6" y2="25"/>
-            <line x1="55" y1="5.4" x2="52.4" y2="13"/>
-            <line x1="27.6" y1="67" x2="25" y2="74.6"/>
-            <line x1="5.4" y1="25" x2="13" y2="27.6"/>
-            <line x1="67" y1="52.4" x2="74.6" y2="55"/>
-            <line x1="14.6" y1="30.4" x2="22" y2="33.2"/>
-            <line x1="58" y1="46.8" x2="65.4" y2="49.6"/>
-            <line x1="30.4" y1="65.4" x2="33.2" y2="58"/>
-            <line x1="46.8" y1="22" x2="49.6" y2="14.6"/>
-            <line x1="65.4" y1="30.4" x2="58" y2="33.2"/>
-            <line x1="22" y1="46.8" x2="14.6" y2="49.6"/>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 21 human figure rays -->
+          <g fill="#F5C518" opacity="0.9">
+            <!-- Each figure: head circle + body line, rotated around center -->
+            <!-- We place figures at radius ~42 from center, each rotated by 360/21 = 17.14 deg -->
+            <g transform="rotate(0 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(17.14 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(34.28 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(51.42 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(68.56 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(85.7 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(102.84 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(119.98 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(137.12 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(154.26 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(171.4 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(188.54 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(205.68 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(222.82 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(239.96 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(257.1 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(274.24 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(291.38 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(308.52 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(325.66 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
+            <g transform="rotate(342.8 50 50)"><circle cx="50" cy="10" r="2.2"/><rect x="49" y="12.5" width="2" height="6" rx="1"/></g>
           </g>
         </svg>
       </div>
-      <div class="roj-emoji">☀️</div>
+      <div class="roj-core">
+        <svg viewBox="0 0 100 100" width="100" height="100">
+          <circle cx="50" cy="50" r="18" fill="#F5C518" opacity="0.95"/>
+          <circle cx="50" cy="50" r="13" fill="#E8A800"/>
+        </svg>
+      </div>
     </div>
     <div style="font-size:11px;color:#C4A24C;letter-spacing:2px;font-weight:800;margin-bottom:2px">NASKURD · NASNAMEYA ÇANDA KURDÎ A DÎJÎTAL</div>
     <div style="font-size:10px;color:rgba(196,162,76,.6);letter-spacing:1px;margin-bottom:20px">NASKURD · KURDISH CULTURAL DIGITAL IDENTITY</div>
@@ -3040,7 +3047,6 @@ function backToTw(){
     </div>
     <a href="https://naskurd.com" style="display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">nasKURD.com →</a>
     <div id="vfy-error" style="display:none;color:#E05050;margin-top:16px;font-size:14px">Ev nasname nehat dîtin an hêj nehat erêkirin.<br><span style="font-size:12px;color:#888">This identity was not found or not yet verified.</span></div>
-    <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A);border-radius:4px;margin-top:24px"></div>
   </div>
 </div>
 
