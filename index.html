@@ -1109,6 +1109,7 @@ async function loadApps(){
         vejin:r.vejin||false,
         status:r.status||'pending',
         submitted:r.submitted_at?r.submitted_at.slice(0,10):'',
+        submitted_at:r.submitted_at||null,
         id:r.krd_number||'',
         krd_number:r.krd_number||'',
         did:r.did||'',
@@ -2255,20 +2256,21 @@ function stopStatusPoll(){
 
 function startCountdown(){
   if(countdownTimer)clearInterval(countdownTimer);
-  // Check localStorage for existing countdown for this user
-  const key='naskurd_cd_'+itw;
-  const saved=localStorage.getItem(key);
-  if(saved){
-    const savedEnd=parseInt(saved);
-    if(savedEnd>Date.now()){
-      countdownEnd=savedEnd;
+  // Use submitted_at from Supabase for accurate countdown across devices
+  if(myApp&&myApp.submitted_at){
+    const submittedAt=new Date(myApp.submitted_at).getTime();
+    countdownEnd=submittedAt+(48*60*60*1000);
+  } else {
+    // Fallback to localStorage
+    const key='naskurd_cd_'+itw;
+    const saved=localStorage.getItem(key);
+    if(saved){
+      const savedEnd=parseInt(saved);
+      countdownEnd=savedEnd>Date.now()?savedEnd:Date.now()+(48*60*60*1000);
     } else {
       countdownEnd=Date.now()+(48*60*60*1000);
       localStorage.setItem(key,countdownEnd);
     }
-  } else {
-    countdownEnd=Date.now()+(48*60*60*1000);
-    localStorage.setItem(key,countdownEnd);
   }
   countdownTimer=setInterval(updateCountdown,1000);
   updateCountdown();
