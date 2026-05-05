@@ -752,6 +752,35 @@ select option{background:#041E32;color:#f0e6cc}
 
 <script>
 
+// Verify page route handler
+(function(){
+  const path=window.location.pathname;
+  const m=path.match(/^\/verify\/(.+)$/);
+  if(!m)return;
+  const handle=m[1].replace(/^@/,'');
+  document.addEventListener('DOMContentLoaded',function(){
+    show('verify');
+    fetch('https://ayyuetqyfjdbxmnqhgyz.supabase.co/rest/v1/applications?twitter=eq.'+handle+'&select=name,twitter,krd_number,country,approved_at,status',{
+      headers:{'apikey':'sb_publishable_dNrjycfPx-IVej6rxH0ICw_uVNzyWZD','Authorization':'Bearer sb_publishable_dNrjycfPx-IVej6rxH0ICw_uVNzyWZD'}
+    }).then(r=>r.json()).then(data=>{
+      if(data&&data[0]&&data[0].status==='approved'){
+        const a=data[0];
+        document.getElementById('vfy-name').textContent=a.name||'';
+        document.getElementById('vfy-handle').textContent='@'+a.twitter;
+        document.getElementById('vfy-krd').textContent=a.krd_number||'—';
+        document.getElementById('vfy-country').textContent=a.country||'—';
+        document.getElementById('vfy-date').textContent=a.approved_at?a.approved_at.slice(0,10):'—';
+      }else{
+        document.getElementById('vfy-badge').style.display='none';
+        document.getElementById('vfy-error').style.display='block';
+      }
+    }).catch(()=>{
+      document.getElementById('vfy-badge').style.display='none';
+      document.getElementById('vfy-error').style.display='block';
+    });
+  });
+})();
+
 const SUPABASE_URL = 'https://ayyuetqyfjdbxmnqhgyz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_dNrjycfPx-IVej6rxH0ICw_uVNzyWZD';
 
@@ -2283,6 +2312,37 @@ function stopCountdown(){
   if(itw)localStorage.removeItem('naskurd_cd_'+itw);
   countdownEnd=null;
 }
+function handleExpired(){
+  stopCountdown();
+  const ku=lang==='ku';
+  // Delete application from Supabase
+  if(itw){
+    sbFetch('applications?twitter=eq.'+itw,{method:'DELETE'}).catch(()=>{});
+  }
+  // Update UI
+  const pmsg=document.getElementById('pend-msg');
+  if(pmsg)pmsg.innerHTML=ku
+    ?'Dema 48 saetan derbas bû û serlêdana te hat betal kirin. Dikari ji nû ve serlêdanê bikî.'
+    :'The 48-hour window has passed and your application was cancelled. You may apply again.';
+  const timerBox=document.querySelector('#pending .pend-timer-box');
+  if(timerBox)timerBox.style.display='none';
+  const pend=document.getElementById('pending');
+  if(pend){
+    const existing=document.getElementById('reapply-btn');
+    if(!existing){
+      const btn=document.createElement('button');
+      btn.id='reapply-btn';
+      btn.textContent=ku?'Ji nû ve serlêde →':'Apply Again →';
+      btn.style.cssText='margin:16px auto;display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;border:none;border-radius:10px;padding:12px 28px;font-weight:700;font-size:14px;cursor:pointer;';
+      btn.onclick=function(){
+        itw='';myApp=null;
+        langs=[];zar=[];aff='';rt='';
+        show('login');
+      };
+      pend.appendChild(btn);
+    }
+  }
+}
 
 function updateCountdown(){
   if(!countdownEnd)return;
@@ -2291,7 +2351,8 @@ function updateCountdown(){
     document.getElementById('cnt-h').textContent='00';
     document.getElementById('cnt-m').textContent='00';
     document.getElementById('cnt-s').textContent='00';
-    clearInterval(countdownTimer);return;
+    clearInterval(countdownTimer);
+    handleExpired();return;
   }
   const h=Math.floor(diff/3600000);
   const m=Math.floor((diff%3600000)/60000);
@@ -2913,6 +2974,64 @@ function backToTw(){
 <div id="cancel-notif" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;background:rgba(192,57,43,.95);border:1px solid rgba(220,80,60,.6);border-radius:12px;padding:12px 20px;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 24px rgba(2,8,18,.5)">
   <div style="font-size:18px;margin-bottom:6px">🗑</div>
   <div id="cancel-notif-txt" style="font-size:13px;font-weight:700;color:#eee;line-height:1.5">Nasnameya Kurdî A Dîjîtal ya we betal bû!</div>
+</div>
+
+<!-- Verify Screen -->
+<div id="s-verify" class="scr" style="align-items:center;justify-content:center;padding:24px;flex-direction:column;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
+  <div style="max-width:400px;width:100%;text-align:center">
+    <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040);border-radius:4px;margin-bottom:24px"></div>
+    <div style="font-size:40px;margin-bottom:8px">☀️</div>
+    <div style="font-size:13px;color:#C4A24C;letter-spacing:3px;font-weight:700;margin-bottom:4px">NASKURD · NASNAMEYA KURDÎ</div>
+    <div id="vfy-name" style="font-size:22px;font-weight:800;color:#eee;margin:16px 0 4px"></div>
+    <div id="vfy-handle" style="font-size:14px;color:#C4A24C;margin-bottom:20px"></div>
+    <div id="vfy-badge" style="display:inline-block;background:linear-gradient(135deg,#1B7040,#2a9a5e);color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:20px">✅ nasKURD Dijital Kimlik Sahibi</div>
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(196,162,76,.2);border-radius:12px;padding:16px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <span style="color:#888;font-size:13px">KRD #</span>
+        <span id="vfy-krd" style="color:#C4A24C;font-weight:700;font-size:13px"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <span style="color:#888;font-size:13px">Welat</span>
+        <span id="vfy-country" style="color:#eee;font-size:13px"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0">
+        <span style="color:#888;font-size:13px">Erêkirî</span>
+        <span id="vfy-date" style="color:#eee;font-size:13px"></span>
+      </div>
+    </div>
+    <a href="https://naskurd.com" style="display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">nasKURD.com →</a>
+    <div id="vfy-error" style="display:none;color:#E05050;margin-top:16px;font-size:14px">Bu kimlik bulunamadı veya henüz onaylanmamış.</div>
+    <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A);border-radius:4px;margin-top:24px"></div>
+  </div>
+</div>
+
+<!-- Verify Screen -->
+<div id="s-verify" class="scr" style="align-items:center;justify-content:center;padding:24px;flex-direction:column;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
+  <div style="max-width:400px;width:100%;text-align:center">
+    <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040);border-radius:4px;margin-bottom:24px"></div>
+    <div style="font-size:40px;margin-bottom:8px">☀️</div>
+    <div style="font-size:13px;color:#C4A24C;letter-spacing:3px;font-weight:700;margin-bottom:4px">NASKURD · NASNAMEYA KURDÎ</div>
+    <div id="vfy-name" style="font-size:22px;font-weight:800;color:#eee;margin:16px 0 4px"></div>
+    <div id="vfy-handle" style="font-size:14px;color:#C4A24C;margin-bottom:20px"></div>
+    <div id="vfy-badge" style="display:inline-block;background:linear-gradient(135deg,#1B7040,#2a9a5e);color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:20px">✅ nasKURD Dijital Kimlik Sahibi</div>
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(196,162,76,.2);border-radius:12px;padding:16px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <span style="color:#888;font-size:13px">KRD #</span>
+        <span id="vfy-krd" style="color:#C4A24C;font-weight:700;font-size:13px"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <span style="color:#888;font-size:13px">Welat</span>
+        <span id="vfy-country" style="color:#eee;font-size:13px"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0">
+        <span style="color:#888;font-size:13px">Erêkirî</span>
+        <span id="vfy-date" style="color:#eee;font-size:13px"></span>
+      </div>
+    </div>
+    <a href="https://naskurd.com" style="display:block;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">nasKURD.com →</a>
+    <div id="vfy-error" style="display:none;color:#E05050;margin-top:16px;font-size:14px">Bu kimlik bulunamadı veya henüz onaylanmamış.</div>
+    <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A);border-radius:4px;margin-top:24px"></div>
+  </div>
 </div>
   <div class="fb-bot"></div>
 
