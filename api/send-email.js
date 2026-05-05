@@ -1,4 +1,8 @@
 module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -13,6 +17,7 @@ module.exports = async function handler(req, res) {
   let subject, html, to;
 
   if (type === 'new_application') {
+    // Email to admin
     to = 'kurdnasname@gmail.com';
     subject = `nasKURD — Serlêdana nû: @${twitter}`;
     html = `
@@ -29,13 +34,14 @@ module.exports = async function handler(req, res) {
             <tr><td style="padding:8px 0;color:#C4A24C">E-mail</td><td style="padding:8px 0">${email || '—'}</td></tr>
           </table>
           <div style="margin-top:20px">
-            <a href="https://naskurd.com" style="background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Admin Panelê Veke →</a>
+            <a href="https://rojtevkurdi.vercel.app/admin" style="background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Admin Panelê Veke →</a>
           </div>
         </div>
         <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A)"></div>
       </div>
     `;
   } else if (type === 'approved') {
+    // Email to user
     to = email;
     subject = `nasKURD — Serlêdana te hat erêkirin! ✅`;
     html = `
@@ -46,21 +52,6 @@ module.exports = async function handler(req, res) {
           <p style="color:#C4A24C;font-size:18px;font-weight:700;margin:0 0 16px">@${twitter}</p>
           <p style="color:#aaa;margin:0 0 20px">Serlêdana te hat erêkirin. Niha dikari bi hesabê xwe yê X/Twitter ketî nasKURD û nasnameya xwe ya dîjîtal bibîni.</p>
           <a href="https://naskurd.com" style="background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px">nasKURD.com — Têkeve →</a>
-          <p style="color:rgba(196,162,76,.4);font-size:10px;margin-top:24px">@rojtevkurdi · @torakurdakurdi · @_nasKURD</p>
-        </div>
-        <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A)"></div>
-      </div>
-    `;
-  } else if (type === 'rejected') {
-    to = email;
-    subject = `nasKURD — Serlêdana te hate nirxandin`;
-    html = `
-      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#020B18;color:#eee;border-radius:12px;overflow:hidden">
-        <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040)"></div>
-        <div style="padding:24px;text-align:center">
-          <h2 style="color:#E05050;margin:0 0 8px">Serlêdana te hat nirxandin</h2>
-          <p style="color:#C4A24C;font-size:16px;font-weight:700;margin:0 0 16px">@${twitter}</p>
-          <p style="color:#aaa;margin:0 0 20px">Mixabin serlêdana te vê carê nehat pejirandin. Ji bo agahdariya bêtir bi @rojtevkurdi re têkilî bigire.</p>
           <p style="color:rgba(196,162,76,.4);font-size:10px;margin-top:24px">@rojtevkurdi · @torakurdakurdi · @_nasKURD</p>
         </div>
         <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A)"></div>
@@ -78,7 +69,7 @@ module.exports = async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'nasKURD <noreply@naskurd.com>',
+        from: 'nasKURD <onboarding@resend.dev>',
         to: [to],
         subject,
         html
