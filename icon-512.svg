@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#062E50"/>
+      <stop offset="100%" stop-color="#020B18"/>
+    </radialGradient>
+    <radialGradient id="rg" cx="40%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#FFE97A"/>
+      <stop offset="45%" stop-color="#D4A82A"/>
+      <stop offset="100%" stop-color="#8B6010"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="106" fill="url(#bg)"/>
+  <rect x="0" y="0" width="512" height="16" rx="106 106 0 0" fill="#C8202A"/>
+  <rect x="0" y="496" width="512" height="16" rx="0 0 106 106" fill="#1B7040"/>
+
+  <g transform="translate(256,256)" fill="url(#rg)">
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate"
+      from="0 0 0" to="360 0 0" dur="12s" repeatCount="indefinite" additive="sum"/>
+    <g transform="rotate(0)">    <polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(17.14)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(34.28)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(51.42)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(68.56)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(85.7)"> <polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(102.84)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(119.98)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(137.12)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(154.26)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(171.4)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(188.54)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(205.68)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(222.82)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(239.96)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(257.1)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(274.24)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(291.38)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(308.52)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(325.66)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(342.8)"><polygon points="0,0 -8,-80 8,-138"/></g>
+  </g>
+
+  <circle cx="256" cy="256" r="51" fill="url(#rg)"/>
+</svg>
