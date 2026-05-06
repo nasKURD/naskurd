@@ -2425,7 +2425,100 @@ function submitChpw(){
 
 function showForgotPw(){
   document.getElementById('forgot-modal').classList.add('on');
+  document.getElementById('forgot-form').style.display='block';
+  document.getElementById('forgot-success').style.display='none';
+  document.getElementById('forgot-email-inp').value='';
+  document.getElementById('forgot-err').style.display='none';
 }
+
+async function submitForgotEmail(){
+  const email = document.getElementById('forgot-email-inp').value.trim();
+  const err = document.getElementById('forgot-err');
+  const btn = document.getElementById('forgot-send-btn');
+  const ku = lang === 'ku';
+  if(!email){
+    err.textContent = ku ? 'E-maila xwe binivîse' : 'Please enter your email';
+    err.style.display='block'; return;
+  }
+  btn.disabled = true;
+  btn.textContent = ku ? 'Tê şandin...' : 'Sending...';
+  err.style.display='none';
+  try {
+    const res = await fetch('/api/reset-password', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if(res.ok){
+      document.getElementById('forgot-form').style.display='none';
+      document.getElementById('forgot-success').style.display='block';
+    } else if(data.error === 'not_found'){
+      err.textContent = ku ? 'Ev e-mail nehat dîtin' : 'Email not found';
+      err.style.display='block';
+    } else {
+      err.textContent = ku ? 'Xelet çêbû, dîsa biceribîne' : 'Error, please try again';
+      err.style.display='block';
+    }
+  } catch(e){
+    err.textContent = ku ? 'Xelet çêbû' : 'Error occurred';
+    err.style.display='block';
+  }
+  btn.disabled = false;
+  btn.textContent = ku ? 'Bişîne →' : 'Send →';
+}
+
+let resetToken = null;
+
+async function submitNewPassword(){
+  const pw1 = document.getElementById('reset-pw1').value;
+  const pw2 = document.getElementById('reset-pw2').value;
+  const err = document.getElementById('reset-err');
+  const ku = lang === 'ku';
+  if(pw1.length < 6){
+    err.textContent = ku ? 'Şîfre divê herî kêm 6 karakter be' : 'Password must be at least 6 characters';
+    err.style.display='block'; return;
+  }
+  if(pw1 !== pw2){
+    err.textContent = ku ? 'Şîfre ne yek in' : 'Passwords do not match';
+    err.style.display='block'; return;
+  }
+  err.style.display='none';
+  try {
+    const res = await fetch('/api/verify-reset', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token: resetToken, new_password: pw1 })
+    });
+    const data = await res.json();
+    if(res.ok){
+      alert(ku ? '✅ Şîfreya nû hat tomarkirin! Niha dikari têkevin.' : '✅ Password updated! You can now log in.');
+      window.location.href = '/';
+    } else if(data.error === 'expired_token'){
+      err.textContent = ku ? 'Girêdan dema xwe derbas kiriye. Dîsa biceribîne.' : 'Link has expired. Please try again.';
+      err.style.display='block';
+    } else {
+      err.textContent = ku ? 'Girêdana xelet' : 'Invalid link';
+      err.style.display='block';
+    }
+  } catch(e){
+    err.textContent = ku ? 'Xelet çêbû' : 'Error occurred';
+    err.style.display='block';
+  }
+}
+
+// Check for reset token in URL
+(function checkResetToken(){
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('reset');
+  if(token){
+    resetToken = token;
+    // Hide all screens, show reset screen
+    document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+    const rs = document.getElementById('s-reset');
+    if(rs) rs.classList.add('on');
+  }
+})();
 
 function resetUserPw(twitter){
   const ku=lang==='ku';
@@ -2879,13 +2972,45 @@ function backToTw(){
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-size:22px;margin-bottom:6px">🔑</div>
       <div id="forgot-title" style="font-size:13px;font-weight:700;color:#C4A24C">Şîfreya xwe ji bîr kir?</div>
-      <div id="forgot-sub" style="font-size:10px;color:rgba(196,162,76,.4);margin-top:4px;line-height:1.6">Ji kerema xwe bi rêya X/Twitter @nasKURD re têkilî deyn. Admin ê şîfreya we sifir bike û hûn ê bibin şîfreya nû çêkin.</div>
+      <div id="forgot-sub" style="font-size:10px;color:rgba(196,162,76,.4);margin-top:4px;line-height:1.6">E-maila xwe binivîse. Em ê girêdana sifirkirinê ji te re bişînin.</div>
     </div>
-    <div style="background:rgba(196,162,76,.06);border:1px solid rgba(196,162,76,.15);border-radius:10px;padding:10px 14px;margin-bottom:14px;text-align:center">
-      <div style="font-size:12px;color:#C4A24C;font-weight:700">@nasKURD</div>
-      <div id="forgot-x-lbl" style="font-size:9px;color:rgba(196,162,76,.4);margin-top:3px">X / Twitter</div>
+    <div id="forgot-form">
+      <input id="forgot-email-inp" type="email" placeholder="E-mail..."
+        style="width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(196,162,76,.25);border-radius:10px;color:#eee;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:8px"
+        onkeydown="if(event.key==='Enter')submitForgotEmail()"/>
+      <div id="forgot-err" style="font-size:11px;color:#E05050;text-align:center;margin-bottom:8px;display:none"></div>
+      <button onclick="submitForgotEmail()" style="width:100%;padding:11px;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);border:none;border-radius:10px;color:#eee;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px" id="forgot-send-btn">Bişîne →</button>
+      <button onclick="document.getElementById('forgot-modal').classList.remove('on')" style="padding:10px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(196,162,76,.2);color:#aaa;font-size:12px;cursor:pointer;width:100%" id="forgot-close-btn">Bigire</button>
     </div>
-    <button onclick="document.getElementById('forgot-modal').classList.remove('on')" style="padding:10px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(196,162,76,.2);color:#aaa;font-size:12px;cursor:pointer;width:100%" id="forgot-close-btn">Bigire</button>
+    <div id="forgot-success" style="display:none;text-align:center">
+      <div style="font-size:28px;margin-bottom:10px">✅</div>
+      <div id="forgot-ok-txt" style="font-size:12px;color:#4EC87A;margin-bottom:16px">Girêdan hat şandin! E-maila xwe kontrol bike.</div>
+      <button onclick="document.getElementById('forgot-modal').classList.remove('on')" style="padding:10px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(196,162,76,.2);color:#aaa;font-size:12px;cursor:pointer;width:100%">Bigire</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reset Password Screen -->
+<div id="s-reset" class="scr" style="align-items:center;justify-content:center;padding:20px 16px;background:radial-gradient(ellipse at 50% 30%,#051C2E 0%,#021525 100%)">
+  <div style="width:100%;max-width:380px">
+    <div style="background:rgba(2,11,20,.97);border:1px solid rgba(196,162,76,.2);border-radius:20px;padding:24px;box-shadow:0 20px 60px rgba(2,8,18,.8)">
+      <div style="height:4px;background:linear-gradient(90deg,#C8202A,#F5C518 50%,#1B7040);border-radius:4px;margin-bottom:20px"></div>
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:28px;margin-bottom:8px">🔑</div>
+        <div style="font-size:16px;font-weight:700;color:#C4A24C">Şîfreya Nû</div>
+        <div style="font-size:10px;color:rgba(196,162,76,.4);margin-top:4px">New Password</div>
+      </div>
+      <div style="position:relative;margin-bottom:8px">
+        <input id="reset-pw1" type="password" maxlength="8" placeholder="Şîfreya nû (6-8 kar.)"
+          style="width:100%;padding:13px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(196,162,76,.25);border-radius:10px;color:#eee;font-size:14px;letter-spacing:2px;outline:none;box-sizing:border-box;text-align:center"/>
+      </div>
+      <div style="position:relative;margin-bottom:12px">
+        <input id="reset-pw2" type="password" maxlength="8" placeholder="Dubare bike / Repeat"
+          style="width:100%;padding:13px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(196,162,76,.25);border-radius:10px;color:#eee;font-size:14px;letter-spacing:2px;outline:none;box-sizing:border-box;text-align:center"/>
+      </div>
+      <div id="reset-err" style="font-size:11px;color:#E05050;text-align:center;margin-bottom:8px;display:none"></div>
+      <button onclick="submitNewPassword()" style="width:100%;padding:13px;background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);border:none;border-radius:10px;color:#eee;font-size:13px;font-weight:700;cursor:pointer">Şîfreya nû hilîne →</button>
+    </div>
   </div>
 </div>
 
