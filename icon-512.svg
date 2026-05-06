@@ -5,38 +5,30 @@
       <stop offset="45%" stop-color="#D4A82A"/>
       <stop offset="100%" stop-color="#8B6010"/>
     </radialGradient>
-    <clipPath id="bottom-half">
-      <rect x="0" y="256" width="512" height="256"/>
-    </clipPath>
   </defs>
-
-  <rect width="512" height="512" rx="106" fill="#D32F2F"/>
-  <rect width="512" height="512" rx="106" fill="#1B7040" clip-path="url(#bottom-half)"/>
-  <rect x="16" y="16" width="480" height="480" rx="92" fill="#FFFFFF"/>
-
+  <rect width="512" height="512" rx="106" fill="#FFFFFF"/>
   <g transform="translate(256,256)" fill="url(#rg)">
-      from="0 0 0" to="360 0 0" dur="12s" repeatCount="indefinite" additive="sum"/>
-    <g transform="rotate(0)">    <polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(17.14)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(34.28)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(51.42)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(68.56)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(85.7)"> <polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(102.84)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(119.98)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(137.12)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(154.26)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(171.4)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(188.54)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(205.68)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(222.82)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(239.96)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(257.1)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(274.24)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(291.38)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(308.52)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(325.66)"><polygon points="0,0 -8,-80 8,-138"/></g>
-    <g transform="rotate(342.8)"><polygon points="0,0 -8,-80 8,-138"/></g>
+    <g transform="rotate(0)">    <polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(17.14)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(34.28)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(51.42)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(68.56)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(85.7)"> <polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(102.84)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(119.98)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(137.12)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(154.26)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(171.4)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(188.54)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(205.68)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(222.82)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(239.96)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(257.1)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(274.24)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(291.38)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(308.52)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(325.66)"><polygon points="0,0 -8,-75 8,-138"/></g>
+    <g transform="rotate(342.8)"><polygon points="0,0 -8,-75 8,-138"/></g>
   </g>
-  <circle cx="256" cy="256" r="51" fill="url(#rg)"/>
+  <circle cx="256" cy="256" r="48" fill="url(#rg)"/>
 </svg>

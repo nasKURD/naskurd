@@ -5,42 +5,30 @@
       <stop offset="45%" stop-color="#D4A82A"/>
       <stop offset="100%" stop-color="#8B6010"/>
     </radialGradient>
-    <clipPath id="bottom-half">
-      <rect x="0" y="96" width="192" height="96"/>
-    </clipPath>
   </defs>
-
-  <!-- Red full rounded rect (top half border) -->
-  <rect width="192" height="192" rx="40" fill="#D32F2F"/>
-  <!-- Green rounded rect clipped to bottom half -->
-  <rect width="192" height="192" rx="40" fill="#1B7040" clip-path="url(#bottom-half)"/>
-  <!-- White inner rect (creates border effect, follows rounded corners) -->
-  <rect x="6" y="6" width="180" height="180" rx="35" fill="#FFFFFF"/>
-
-  <!-- 21 identical rays -->
+  <rect width="192" height="192" rx="40" fill="#FFFFFF"/>
   <g transform="translate(96,96)" fill="url(#rg)">
-      from="0 0 0" to="360 0 0" dur="12s" repeatCount="indefinite" additive="sum"/>
-    <g transform="rotate(0)">    <polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(17.14)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(34.28)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(51.42)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(68.56)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(85.7)"> <polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(102.84)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(119.98)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(137.12)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(154.26)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(171.4)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(188.54)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(205.68)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(222.82)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(239.96)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(257.1)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(274.24)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(291.38)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(308.52)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(325.66)"><polygon points="0,0 -3,-30 3,-52"/></g>
-    <g transform="rotate(342.8)"><polygon points="0,0 -3,-30 3,-52"/></g>
+    <g transform="rotate(0)">    <polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(17.14)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(34.28)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(51.42)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(68.56)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(85.7)"> <polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(102.84)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(119.98)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(137.12)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(154.26)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(171.4)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(188.54)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(205.68)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(222.82)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(239.96)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(257.1)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(274.24)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(291.38)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(308.52)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(325.66)"><polygon points="0,0 -3,-28 3,-52"/></g>
+    <g transform="rotate(342.8)"><polygon points="0,0 -3,-28 3,-52"/></g>
   </g>
-  <circle cx="96" cy="96" r="19" fill="url(#rg)"/>
+  <circle cx="96" cy="96" r="18" fill="url(#rg)"/>
 </svg>
