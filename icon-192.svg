@@ -1,23 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#062E50"/>
-      <stop offset="100%" stop-color="#020B18"/>
-    </radialGradient>
     <radialGradient id="rg" cx="40%" cy="38%" r="62%">
       <stop offset="0%" stop-color="#FFE97A"/>
       <stop offset="45%" stop-color="#D4A82A"/>
       <stop offset="100%" stop-color="#8B6010"/>
     </radialGradient>
+    <clipPath id="bottom-half">
+      <rect x="0" y="96" width="192" height="96"/>
+    </clipPath>
   </defs>
 
-  <rect width="192" height="192" rx="40" fill="url(#bg)"/>
-  <rect x="0" y="0" width="192" height="6" rx="40 40 0 0" fill="#C8202A"/>
-  <rect x="0" y="186" width="192" height="6" rx="0 0 40 40" fill="#1B7040"/>
+  <!-- Red full rounded rect (top half border) -->
+  <rect width="192" height="192" rx="40" fill="#D32F2F"/>
+  <!-- Green rounded rect clipped to bottom half -->
+  <rect width="192" height="192" rx="40" fill="#1B7040" clip-path="url(#bottom-half)"/>
+  <!-- White inner rect (creates border effect, follows rounded corners) -->
+  <rect x="6" y="6" width="180" height="180" rx="35" fill="#FFFFFF"/>
 
-  <!-- 21 identical rays, each rotated 17.14° apart -->
+  <!-- 21 identical rays -->
   <g transform="translate(96,96)" fill="url(#rg)">
-    <animateTransform attributeName="transform" attributeType="XML" type="rotate"
       from="0 0 0" to="360 0 0" dur="12s" repeatCount="indefinite" additive="sum"/>
     <g transform="rotate(0)">    <polygon points="0,0 -3,-30 3,-52"/></g>
     <g transform="rotate(17.14)"><polygon points="0,0 -3,-30 3,-52"/></g>
@@ -41,7 +42,5 @@
     <g transform="rotate(325.66)"><polygon points="0,0 -3,-30 3,-52"/></g>
     <g transform="rotate(342.8)"><polygon points="0,0 -3,-30 3,-52"/></g>
   </g>
-
-  <!-- Sun center (static) -->
   <circle cx="96" cy="96" r="19" fill="url(#rg)"/>
 </svg>
