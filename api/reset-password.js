@@ -13,7 +13,7 @@ module.exports = async function handler(req, res) {
   if (!email) return res.status(400).json({ error: 'Email required' });
 
   try {
-    // Kullanıcı var mı kontrol et
+    // Check if user exists
     const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/applications?email=eq.${encodeURIComponent(email)}&status=eq.approved&select=email,twitter`, {
       headers: {
         'apikey': SUPABASE_KEY,
@@ -25,11 +25,11 @@ module.exports = async function handler(req, res) {
 
     const twitter = users[0].twitter;
 
-    // Token oluştur
+    // Generate reset token
     const token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-    const expires_at = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 saat
+    const expires_at = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 
-    // Token'ı Supabase'e kaydet
+    // Save token to Supabase
     await fetch(`${SUPABASE_URL}/rest/v1/password_resets`, {
       method: 'POST',
       headers: {
@@ -40,7 +40,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({ email, token, expires_at })
     });
 
-    // Email gönder
+    // Send reset email
     const resetLink = `https://naskurd.com/?reset=${token}`;
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -59,7 +59,7 @@ module.exports = async function handler(req, res) {
               <h2 style="color:#C4A24C;margin:0 0 8px">🔑 Şîfreya Nû</h2>
               <p style="color:#C4A24C;font-size:16px;font-weight:700;margin:0 0 16px">@${twitter}</p>
               <p style="color:#aaa;margin:0 0 20px">Ji bo şîfreya xwe ji nû ve saz bikî, li ser bişkoja jêrîn bitikîne. Ev girêdan tenê 1 saetê derbasdar e.</p>
-              <a href="${resetLink}" style="background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px">Şîreya xwe ji nû ve saz bike →</a>
+              <a href="${resetLink}" style="background:linear-gradient(90deg,#C8202A,#C4A24C 50%,#1B7040);color:#000;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px">Şîfreya xwe ji nû ve saz bike →</a>
               <p style="color:rgba(196,162,76,.4);font-size:10px;margin-top:24px">@rojtevkurdi · @torakurdakurdi · @_nasKURD</p>
             </div>
             <div style="height:4px;background:linear-gradient(90deg,#1B7040,#F5C518 50%,#C8202A)"></div>
