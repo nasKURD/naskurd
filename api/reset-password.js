@@ -40,8 +40,8 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({ email, token, expires_at })
     });
 
-    // Send reset email
-    const resetLink = `https://naskurd.com/?reset=${token}`;
+    // Send reset email - use # hash to avoid link issues on mobile
+    const resetLink = `https://naskurd.com/#reset=${token}`;
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
