@@ -1228,13 +1228,29 @@ function showLoading(txt){
 try{
 localStorage.removeItem('naskurd_tw');
 localStorage.removeItem('naskurd_hash');
-show('invite');
-setLg(lang);
-// Show loading while Supabase loads
-showLoading(lang==='en'?'Loading...':'Barkirin...');
-Promise.all([loadApps(),loadInviteCode()]).finally(()=>{
-  hideLoading();
-});
+// Check reset token BEFORE anything else (sync, reliable)
+const _rh=window.location.hash;
+const _rp=new URLSearchParams(window.location.search);
+const _rt=_rp.get('reset')||(_rh.startsWith('#reset=')?_rh.slice(7):null);
+if(_rt){
+  // Reset flow - skip invite screen completely
+  resetToken=_rt;
+  showLoading('Barkirin...');
+  Promise.all([loadApps(),loadInviteCode()]).finally(()=>{
+    hideLoading();
+    document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+    const rs=document.getElementById('s-reset');
+    if(rs)rs.classList.add('on');
+  });
+} else {
+  // Normal flow
+  show('invite');
+  setLg(lang);
+  showLoading(lang==='en'?'Loading...':'Barkirin...');
+  Promise.all([loadApps(),loadInviteCode()]).finally(()=>{
+    hideLoading();
+  });
+}
 }catch(e){hideLoading();}
 
 // Populate selects and chips
