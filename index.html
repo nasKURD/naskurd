@@ -425,7 +425,7 @@ select option{background:#041E32;color:#f0e6cc}
           <div style="font-size:24px;color:rgba(255,255,255,.35);font-weight:700;padding-top:2px">:</div>
           <div style="text-align:center">
             <div id="cnt-s" style="font-size:28px;font-weight:800;color:#60A5FA;font-family:monospace;line-height:1">00</div>
-            <div id="cnt-sl" style="font-size:8px;color:rgba(255,255,255,.4);margin-top:3px">Saniye</div>
+            <div id="cnt-sl" style="font-size:8px;color:rgba(255,255,255,.4);margin-top:3px">Çirke</div>
           </div>
         </div>
       </div>
@@ -810,7 +810,7 @@ async function sbFetch(path, options={}) {
 // ── Rate Limiting ─────────────────────────────────────────────
 const RL_KEY='naskurd_rl';
 const RL_MAX=3;
-const RL_LOCK=10*60*1000; // 10 dakika
+const RL_LOCK=10*60*1000; // 10 deqe
 
 function getRateLimit(){
   try{
@@ -1620,7 +1620,9 @@ function setLg(l){
   const bde=document.getElementById('btn-del');if(bde)bde.textContent=ku?'🗑 Nasnameya Min Betal Bike':'🗑 Cancel My Identity';
   const forgotBtn=document.getElementById('forgot-pw-btn');if(forgotBtn)forgotBtn.textContent=ku?'Şîfreya xwe ji bîr kir?':'Forgot your password?';
   const forgotTitle=document.getElementById('forgot-title');if(forgotTitle)forgotTitle.textContent=ku?'Şîfreya xwe ji bîr kir?':'Forgot your password?';
-  const forgotSub=document.getElementById('forgot-sub');if(forgotSub)forgotSub.textContent=ku?'Ji kerema xwe bi rêya X/Twitter @nasKURD re têkilî deyn. Admin ê şîfreya we sifir bike û hûn ê bibin şîfreya nû çêkin.':'Please contact @nasKURD via X/Twitter. The admin will reset your password and you can create a new one.';
+  const forgotSub=document.getElementById('forgot-sub');if(forgotSub)forgotSub.textContent=ku?'E-maila xwe binivîse. Em ê girêdana nû kirinê ji te re bişînin. Girêdan 1 saetê derbasdar e.':'Enter your email. We will send you a reset link. The link is valid for 1 hour.';
+  const forgotSendBtn=document.getElementById('forgot-send-btn');if(forgotSendBtn)forgotSendBtn.textContent=ku?'Bişîne →':'Send →';
+  const forgotOkTxt=document.getElementById('forgot-ok-txt');if(forgotOkTxt)forgotOkTxt.textContent=ku?'Girêdan hat şandin! E-maila xwe kontrol bike.':'Link sent! Check your email.';
   const forgotClose=document.getElementById('forgot-close-btn');if(forgotClose)forgotClose.textContent=ku?'Bigire':'Close';
   const bchpw=document.getElementById('btn-chpw');if(bchpw)bchpw.textContent=ku?'🔑 Şîfreya Xwe Biguhêre':'🔑 Change Password';
   const chpwtitle=document.getElementById('chpw-title');if(chpwtitle)chpwtitle.textContent=ku?'Şîfreya xwe biguhêre':'Change your password';
@@ -2421,7 +2423,7 @@ function updateCountdownLabels(){
   const ku=lang==='ku';
   const hl=document.getElementById('cnt-hl');if(hl)hl.textContent=ku?'Saet':'Hours';
   const ml=document.getElementById('cnt-ml');if(ml)ml.textContent=ku?'Deqe':'Minutes';
-  const sl=document.getElementById('cnt-sl');if(sl)sl.textContent=ku?'Saniye':'Seconds';
+  const sl=document.getElementById('cnt-sl');if(sl)sl.textContent=ku?'Çirke':'Seconds';
   const tl=document.getElementById('pend-timer-label');if(tl)tl.textContent=ku?'48 saet mayî':'48 hours remaining';
 }
 
@@ -3050,7 +3052,7 @@ function backToTw(){
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-size:22px;margin-bottom:6px">🔑</div>
       <div id="forgot-title" style="font-size:13px;font-weight:700;color:#60A5FA">Şîfreya xwe ji bîr kir?</div>
-      <div id="forgot-sub" style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px;line-height:1.6">E-maila xwe binivîse. Em ê girêdana sifirkirinê ji te re bişînin.</div>
+      <div id="forgot-sub" style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px;line-height:1.6">E-maila xwe binivîse. Em ê girêdana nû kirinê ji te re bişînin. Girêdan 1 saetê derbasdar e.</div>
     </div>
     <div id="forgot-form">
       <input id="forgot-email-inp" type="email" placeholder="E-mail..."
