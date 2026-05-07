@@ -826,6 +826,8 @@ function resetRateLimit(){
 }
 
 let rlTimer=null;
+let resetToken = null; // GLOBAL: declared here to avoid TDZ error in try-catch below
+
 function startLockCountdown(){
   if(rlTimer)clearInterval(rlTimer);
   const btn=document.getElementById('inv-btn');
@@ -2550,8 +2552,6 @@ async function submitForgotEmail(){
   btn.textContent = ku ? 'Bişîne →' : 'Send →';
 }
 
-let resetToken = null;
-
 async function submitNewPassword(){
   const pw1 = document.getElementById('reset-pw1').value;
   const pw2 = document.getElementById('reset-pw2').value;
@@ -2593,13 +2593,14 @@ async function submitNewPassword(){
 (function checkResetToken(){
   const params = new URLSearchParams(window.location.search);
   const token = params.get('reset');
-  if(token){
-    resetToken = token;
-    // Hide all screens, show reset screen
+  if(!token) return;
+  resetToken = token;
+  // s-reset is defined AFTER this script block, so wait for DOM
+  document.addEventListener('DOMContentLoaded', function(){
     document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
     const rs = document.getElementById('s-reset');
     if(rs) rs.classList.add('on');
-  }
+  });
 })();
 
 function resetUserPw(twitter){
