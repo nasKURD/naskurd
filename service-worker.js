@@ -1,4 +1,4 @@
-const CACHE = 'naskurd-v3';
+const CACHE = 'naskurd-v4';
 const ASSETS = ['/', '/index.html', '/icon-192.svg', '/icon-512.svg', '/manifest.json'];
 
 self.addEventListener('install', e => {
