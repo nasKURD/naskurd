@@ -2507,18 +2507,21 @@ async function submitNewPassword(){
   }
 }
 
-// Check for reset token in URL
-(function checkResetToken(){
+// Check for reset token in URL - run after full page load
+window.addEventListener("load", function(){
   const params = new URLSearchParams(window.location.search);
-  const token = params.get('reset');
+  const token = params.get("reset");
   if(token){
     resetToken = token;
-    // Hide all screens, show reset screen
-    document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
-    const rs = document.getElementById('s-reset');
-    if(rs) rs.classList.add('on');
+    setTimeout(function(){
+      document.querySelectorAll(".scr").forEach(s => s.classList.remove("on"));
+      const rs = document.getElementById("s-reset");
+      if(rs) rs.classList.add("on");
+      const ld = document.getElementById("s-loading");
+      if(ld) ld.style.display="none";
+    }, 300);
   }
-})();
+});
 
 function resetUserPw(twitter){
   const ku=lang==='ku';
