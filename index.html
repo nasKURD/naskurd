@@ -1566,8 +1566,8 @@ function setLg(l){
   const bde=document.getElementById('btn-del');if(bde)bde.textContent=ku?'🗑 Nasnameya Min Betal Bike':'🗑 Cancel My Identity';
   const forgotBtn=document.getElementById('forgot-pw-btn');if(forgotBtn)forgotBtn.textContent=ku?'Şîfreya xwe ji bîr kir?':'Forgot your password?';
   const forgotTitle=document.getElementById('forgot-title');if(forgotTitle)forgotTitle.textContent=ku?'Şîfreya xwe ji bîr kir?':'Forgot your password?';
-  const forgotSub=document.getElementById('forgot-sub');if(forgotSub)forgotSub.textContent=ku?'Ji kerema xwe bi rêya X/Twitter @nasKURD re têkilî deyn. Admin ê şîfreya we sifir bike û hûn ê bibin şîfreya nû çêkin.':'Please contact @nasKURD via X/Twitter. The admin will reset your password and you can create a new one.';
-  const forgotClose=document.getElementById('forgot-close-btn');if(forgotClose)forgotClose.textContent=ku?'Bigire':'Close';
+  const forgotSub=document.getElementById('forgot-sub');if(forgotSub)forgotSub.textContent=ku?'E-maila xwe binivîse. Em ê girêdana sifirkirinê ji te re bişînin.':'Enter your email. We will send you a reset link.';
+  const forgotClose=document.getElementById('forgot-close-btn');if(forgotClose)forgotClose.textContent=ku?'Bigire':'Close';const forgotSendBtn=document.getElementById('forgot-send-btn');if(forgotSendBtn&&!forgotSendBtn.disabled)forgotSendBtn.textContent=ku?'Bişîne →':'Send →';const forgotOkTxt=document.getElementById('forgot-ok-txt');if(forgotOkTxt)forgotOkTxt.textContent=ku?'Girêdan hat şandin! E-maila xwe kontrol bike.':'Link sent! Check your email.';
   const bchpw=document.getElementById('btn-chpw');if(bchpw)bchpw.textContent=ku?'🔑 Şîfreya Xwe Biguhêre':'🔑 Change Password';
   const chpwtitle=document.getElementById('chpw-title');if(chpwtitle)chpwtitle.textContent=ku?'Şîfreya xwe biguhêre':'Change your password';
   const chpwsub=document.getElementById('chpw-sub');if(chpwsub)chpwsub.textContent=ku?'Şîfreya nû 6-8 karakter be':'New password must be 6-8 characters';
@@ -2507,21 +2507,18 @@ async function submitNewPassword(){
   }
 }
 
-// Check for reset token in URL - run after full page load
-window.addEventListener("load", function(){
+// Check for reset token in URL
+(function checkResetToken(){
   const params = new URLSearchParams(window.location.search);
-  const token = params.get("reset");
+  const token = params.get('reset');
   if(token){
     resetToken = token;
-    setTimeout(function(){
-      document.querySelectorAll(".scr").forEach(s => s.classList.remove("on"));
-      const rs = document.getElementById("s-reset");
-      if(rs) rs.classList.add("on");
-      const ld = document.getElementById("s-loading");
-      if(ld) ld.style.display="none";
-    }, 300);
+    // Hide all screens, show reset screen
+    document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+    const rs = document.getElementById('s-reset');
+    if(rs) rs.classList.add('on');
   }
-});
+})();
 
 function resetUserPw(twitter){
   const ku=lang==='ku';
