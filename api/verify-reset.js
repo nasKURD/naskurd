@@ -1,6 +1,9 @@
 const SUPABASE_URL = 'https://ayyuetqyfjdbxmnqhgyz.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
+// Same hash function used in index.html
+function hp(s){let h=0;for(let i=0;i<s.length;i++)h=(Math.imul(31,h)+s.charCodeAt(i))|0;return h.toString(36);}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -32,12 +35,8 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'expired_token' });
     }
 
-    // Hash new password
-    const encoder = new TextEncoder();
-    const data = encoder.encode(new_password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const pw_hash = hashArray.map(b => b.toString(36)).join('').slice(0, 20);
+    // Hash new password using same algorithm as index.html
+    const pw_hash = hp(new_password);
 
     // Update password in applications table
     await fetch(
